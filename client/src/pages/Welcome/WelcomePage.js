@@ -25,7 +25,7 @@ export default function Welcome() {
         <Header>
           <FadeInDown delay="0.5s">
             <HeaderWrapper>
-              <img src={blueLogo} />
+              <img alt="blue logo" src={blueLogo} />
               <ButtonOptions>
                 <Button visibility={"optional"}>Entrar</Button>
                 <Button
