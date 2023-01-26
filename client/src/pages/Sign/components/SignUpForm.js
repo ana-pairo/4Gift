@@ -42,7 +42,7 @@ export default function SignUpForm() {
       <FormControl
         sx={{ mt: "10px", width: "90%" }}
         variant="standard"
-        error={false}
+        error={error}
       >
         <ThemeProvider theme={formTheme}>
           <InputLabel required htmlFor="standard-adornment-password">
@@ -65,7 +65,7 @@ export default function SignUpForm() {
             }
           />
         </ThemeProvider>
-        <FormHelperText error={false} id="component-helper-text">
+        <FormHelperText error={error} id="component-helper-text">
           {error ? "Senha inválida" : ""}
         </FormHelperText>
       </FormControl>
@@ -79,31 +79,33 @@ export default function SignUpForm() {
       <FormControl
         sx={{ mt: "10px", width: "90%" }}
         variant="standard"
-        error={false}
+        error={error}
       >
-        <InputLabel required htmlFor="standard-adornment-password">
-          Confirmar senha:
-        </InputLabel>
-        <Input
-          required
-          id="standard-adornment-password"
-          type={showPassword ? "text" : "password"}
-          helperText="Senhas não conferem"
-          endAdornment={
-            <InputAdornment position="end">
-              <IconButton
-                aria-label="toggle password visibility"
-                onClick={handleClickShowPassword}
-                onMouseDown={handleMouseDownPassword}
-              >
-                {showPassword ? <VisibilityOff /> : <Visibility />}
-              </IconButton>
-            </InputAdornment>
-          }
-        />
-        <FormHelperText error={false} id="component-helper-text">
-          {error ? "Senha inválida" : ""}
-        </FormHelperText>
+        <ThemeProvider theme={formTheme}>
+          <InputLabel required htmlFor="standard-adornment-password">
+            Confirmar senha:
+          </InputLabel>
+          <Input
+            required
+            id="standard-adornment-password"
+            type={showPassword ? "text" : "password"}
+            helperText="Senhas não conferem"
+            endAdornment={
+              <InputAdornment position="end">
+                <IconButton
+                  aria-label="toggle password visibility"
+                  onClick={handleClickShowPassword}
+                  onMouseDown={handleMouseDownPassword}
+                >
+                  {showPassword ? <VisibilityOff /> : <Visibility />}
+                </IconButton>
+              </InputAdornment>
+            }
+          />
+          <FormHelperText error={error} id="component-helper-text">
+            {error ? "Senha inválida" : ""}
+          </FormHelperText>
+        </ThemeProvider>
       </FormControl>
       <SubmitButton type="submit">Criar</SubmitButton>
     </FormWrapper>
