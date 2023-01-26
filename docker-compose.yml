@@ -1,8 +1,8 @@
 version: "3"
 services:
-  app_react:
+  4Gift-front:
     build: ./client
-    container_name: app_react
+    container_name: 4Gift-front
     volumes:
       - build_react:/var/www/html
 
@@ -14,7 +14,7 @@ services:
     volumes:
       - build_react:/var/www/html
     depends_on:
-      - app_react
+      - 4Gift-front
 
 volumes:
   build_react:
