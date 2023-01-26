@@ -50,12 +50,19 @@ const SignWrapper = styled.div`
     justify-content: start;
 
     width: 100vw;
-    height: ${(props) => (props.screen === "up" ? "650px" : "500px")};
+    height: ${(props) => (props.screen === "up" ? "660px" : "470px")};
     padding: 5vh 5vw 6vh 5vw;
 
     border-radius: 20px;
 
-    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.5), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+  }
+
+  @media (max-height: 570px) {
+    height: ${(props) =>
+      props.screen === "up" ? "calc(100vh + 440px)" : "470px"};
+    padding: 0 5vw 6vh 5vw;
+    padding-top: ${(props) => (props.screen === "in" ? "5vh" : "20vh")};
   }
 `;
 
@@ -128,8 +135,14 @@ const FormBox = styled.div`
   @media (max-width: 600px) {
     width: 100%;
     height: fit-content;
-    min-height: ${(props) => (props.screen ? "250px" : "370px")};
+    min-height: ${(props) => (props.screen ? "200px" : "370px")};
     margin-bottom: 20px;
+  }
+
+  @media (max-height: 570px) {
+    height: ${(props) => (props.screen === "in" ? "200px" : "55vh")};
+    min-height: ${(props) => (props.screen === "in" ? "200px" : "55vh")};
+    overflow-y: scroll;
   }
 `;
 

@@ -19,7 +19,7 @@ export default function SignInForm() {
     event.preventDefault();
   };
 
-  const error = false;
+  const error = true;
 
   return (
     <FormWrapper

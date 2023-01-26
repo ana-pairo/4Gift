@@ -33,7 +33,7 @@ const SlideInUpAnimationUP = keyframes`
      visibility: visible;
    }
    to {
-    transform: translateY(calc(100vh - 600px));
+    transform: translateY(calc(100vh - 640px));
    }
 `;
 
@@ -43,7 +43,7 @@ const SlideInUpAnimationIN = keyframes`
      visibility: visible;
    }
    to {
-    transform: translateY(calc(100vh - 480px));
+    transform: translateY(calc(100vh - 440px));
    }
 `;
 
