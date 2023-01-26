@@ -1,6 +1,6 @@
 FROM node:18.13
 
-WORKDIR /4gift-front
+WORKDIR /app
 
 COPY . .
 RUN npm i
@@ -12,4 +12,4 @@ RUN mv build/* /var/www/html
 
 WORKDIR /
 
-RUN rm -rf /4gift-front
+RUN rm -rf /app
