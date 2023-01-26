@@ -27,13 +27,23 @@ const FadeInDownAnimation = keyframes`
    }
 `;
 
-const SlideInUpAnimation = keyframes`
+const SlideInUpAnimationUP = keyframes`
   from {
      transform: translateY(100%);
      visibility: visible;
    }
    to {
-    transform: translateY(30%);
+    transform: translateY(calc(100vh - 600px));
+   }
+`;
+
+const SlideInUpAnimationIN = keyframes`
+  from {
+     transform: translateY(100%);
+     visibility: visible;
+   }
+   to {
+    transform: translateY(calc(100vh - 480px));
    }
 `;
 
@@ -50,7 +60,8 @@ const FadeInDown = styled(BaseAnimation)`
 `;
 
 const SlideInUp = styled(BaseAnimation)`
-  animation-name: ${SlideInUpAnimation};
+  animation-name: ${(props) =>
+    props.screen === "up" ? SlideInUpAnimationUP : SlideInUpAnimationIN};
 `;
 
 export { FadeIn, SlideInLeft, FadeInDown, SlideInUp };
