@@ -1,8 +1,8 @@
-version: '3'
+version: "3"
 services:
-  client_react:
+  app_react:
     build: ./client
-    container_name: client_react
+    container_name: app_react
     volumes:
       - build_react:/var/www/html
 
@@ -14,7 +14,7 @@ services:
     volumes:
       - build_react:/var/www/html
     depends_on:
-      - client_react
+      - app_react
 
 volumes:
   build_react:
