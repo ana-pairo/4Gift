@@ -1,0 +1,20 @@
+version: "3"
+services:
+  4gift-front:
+    build: ./client
+    container_name: 4gift-front
+    volumes:
+      - build_react:/var/www/html
+
+  nginx:
+    build: ./nginx
+    container_name: nginx
+    ports:
+      - 80:80
+    volumes:
+      - build_react:/var/www/html
+    depends_on:
+      - 4gift-front
+
+volumes:
+  build_react:
