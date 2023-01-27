@@ -1,6 +1,5 @@
-import { Link, useNavigate } from "react-router-dom";
-import { useEffect, useState } from "react";
-import { useSignInWithEmailAndPassword } from "react-firebase-hooks/auth";
+import { Link, Navigate, useNavigate } from "react-router-dom";
+import { useContext, useState } from "react";
 
 import facebookLetter from "../../assets/images/facebookLetter.png";
 import googleLetter from "../../assets/images/googleLetter.png";
@@ -18,45 +17,53 @@ import {
 } from "./styles/SignStyle";
 
 import SignInForm from "./components/SignInForm";
-import { auth } from "../../services/firebaseConfig";
 import { toast } from "react-toastify";
+import { AuthContext } from "../../contexts/AuthContext";
 
 export default function SignIn() {
+  const { SignInEmail, signed, userData, SignInGoogle } =
+    useContext(AuthContext);
   const navigate = useNavigate();
   const [isDisable, setIsDisable] = useState(false);
   const [formData, setFormData] = useState({
     email: "",
     password: "",
   });
-  const [signInWithEmailAndPassword, user, loading, error] =
-    useSignInWithEmailAndPassword(auth);
 
   async function submitEmailSignIn(e) {
     setIsDisable(true);
     e.preventDefault();
 
-    const result = await signInWithEmailAndPassword(
-      formData.email,
-      formData.password
-    );
+    const result = await SignInEmail(formData.email, formData.password);
 
     setIsDisable(false);
-    if (result) {
-      navigate("/register");
-    }
+
+    if (result.check) navigate("/home");
+
+    if (result.error === "auth/user-not-found") toast("Email não cadastrado");
+
+    if (result.error === "auth/wrong-password") toast("Senha incorreta");
   }
 
-  useEffect(() => {
-    if (error?.message === "Firebase: Error (auth/wrong-password).") {
-      toast("Senha incorreta");
-    }
+  async function submitGoogleSignIn() {
+    const result = await SignInGoogle();
 
-    if (error?.message === "Firebase: Error (auth/user-not-found).") {
-      toast("Email não cadastrado");
-    }
-  }, [error]);
+    if (result.check) navigate("/home");
 
-  return (
+    if (result.error) toast("Erro! Por favor tente novamente mais tarde");
+  }
+
+  async function submitFacebookSignIn() {
+    toast("Funcionalidade em progresso! Tente com outra opção");
+  }
+
+  return signed ? (
+    userData.displayName ? (
+      <Navigate to="/home" />
+    ) : (
+      <Navigate to="/account" />
+    )
+  ) : (
     <SecondScreen>
       <Header>
         <FadeIn>
@@ -67,8 +74,14 @@ export default function SignIn() {
         <SignWrapper screen={"in"}>
           <SignHeader>Entre com</SignHeader>
           <SignOptions>
-            <SocialButton background={facebookLetter}></SocialButton>
-            <SocialButton background={googleLetter}></SocialButton>
+            <SocialButton
+              background={facebookLetter}
+              onClick={submitFacebookSignIn}
+            ></SocialButton>
+            <SocialButton
+              background={googleLetter}
+              onClick={submitGoogleSignIn}
+            ></SocialButton>
           </SignOptions>
           <Break>
             <Line />

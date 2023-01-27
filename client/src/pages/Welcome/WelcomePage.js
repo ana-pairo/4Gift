@@ -11,12 +11,17 @@ import {
   Logo,
 } from "./styles/WelcomeStyle";
 
-import { useNavigate } from "react-router-dom";
+import { Navigate, useNavigate } from "react-router-dom";
+import { useContext } from "react";
+import { AuthContext } from "../../contexts/AuthContext";
 
 export default function Welcome() {
+  const { signed } = useContext(AuthContext);
   const navigate = useNavigate();
 
-  return (
+  return signed ? (
+    <Navigate to="/home" />
+  ) : (
     <FadeIn>
       <FirstScreen>
         <Header>

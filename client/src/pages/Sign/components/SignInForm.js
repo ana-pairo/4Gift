@@ -27,6 +27,9 @@ export default function SignInForm({ submitSign, data, setData, isDisable }) {
     setData({ ...data, [e.target.name]: e.target.value });
   };
 
+  const isButtonEnable =
+    data["email"].length > 0 && data["password"].length > 0;
+
   return (
     <FormWrapper onSubmit={submitSign}>
       <ThemeProvider theme={formTheme}>
@@ -70,7 +73,7 @@ export default function SignInForm({ submitSign, data, setData, isDisable }) {
           />
         </ThemeProvider>
       </FormControl>
-      <SubmitButton type="submit" disabled={isDisable}>
+      <SubmitButton type="submit" disabled={isDisable || !isButtonEnable}>
         Entrar
       </SubmitButton>
     </FormWrapper>
