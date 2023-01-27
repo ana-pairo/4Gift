@@ -1,9 +1,6 @@
 import blueLogo from "../../assets/images/4gift_logo_azul.png";
-import {
-  FadeIn,
-  SlideInLeft,
-  FadeInDown,
-} from "../../assets/animations/AnimationsList";
+import { FadeIn, SlideInLeft, FadeInDown } from "../../utils/AnimationsList";
+
 import {
   FirstScreen,
   Header,

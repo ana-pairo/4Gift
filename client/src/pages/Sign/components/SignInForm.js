@@ -1,19 +1,21 @@
-import InputLabel from "@mui/material/InputLabel";
-import Input from "@mui/material/Input";
-import InputAdornment from "@mui/material/InputAdornment";
+import { useState } from "react";
+
 import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
-import IconButton from "@mui/material/IconButton";
-import TextField from "@mui/material/TextField";
-import FormHelperText from "@mui/material/FormHelperText";
-import FormControl from "@mui/material/FormControl";
-import { ThemeProvider } from "@mui/material";
-import { useState } from "react";
+import {
+  ThemeProvider,
+  InputLabel,
+  Input,
+  InputAdornment,
+  IconButton,
+  TextField,
+  FormControl,
+} from "@mui/material";
 
 import { FormWrapper, SubmitButton } from "../styles/FormStyle";
 import { formTheme } from "./FormTheme";
 
-export default function SignInForm() {
+export default function SignInForm({ submitSign, data, setData, isDisable }) {
   const [showPassword, SetShowPassword] = useState(false);
   const handleClickShowPassword = () => SetShowPassword((show) => !show);
 
@@ -21,19 +23,19 @@ export default function SignInForm() {
     event.preventDefault();
   };
 
-  const error = false;
+  const handleFormData = (e) => {
+    setData({ ...data, [e.target.name]: e.target.value });
+  };
 
   return (
-    <FormWrapper
-      onSubmit={() => {
-        console.log("submited");
-      }}
-    >
+    <FormWrapper onSubmit={submitSign}>
       <ThemeProvider theme={formTheme}>
         <TextField
           required
-          error={error}
-          id="standard-search"
+          disabled={isDisable}
+          name="email"
+          value={data.email}
+          onChange={handleFormData}
           label="Email:"
           type="email"
           variant="standard"
@@ -43,7 +45,7 @@ export default function SignInForm() {
       <FormControl
         sx={{ mt: "10px", width: "90%" }}
         variant="standard"
-        error={error}
+        disabled={isDisable}
       >
         <ThemeProvider theme={formTheme}>
           <InputLabel required htmlFor="standard-adornment-password">
@@ -51,12 +53,13 @@ export default function SignInForm() {
           </InputLabel>
           <Input
             required
-            id="standard-adornment-password"
+            name="password"
+            value={data.password}
+            onChange={handleFormData}
             type={showPassword ? "text" : "password"}
             endAdornment={
               <InputAdornment position="end">
                 <IconButton
-                  aria-label="toggle password visibility"
                   onClick={handleClickShowPassword}
                   onMouseDown={handleMouseDownPassword}
                 >
@@ -66,11 +69,10 @@ export default function SignInForm() {
             }
           />
         </ThemeProvider>
-        <FormHelperText error={error} id="component-helper-text">
-          {error ? "Senha ou email inválidos" : ""}
-        </FormHelperText>
       </FormControl>
-      <SubmitButton type="submit">Entrar</SubmitButton>
+      <SubmitButton type="submit" disabled={isDisable}>
+        Entrar
+      </SubmitButton>
     </FormWrapper>
   );
 }

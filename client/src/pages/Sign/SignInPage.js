@@ -1,7 +1,10 @@
+import { Link, useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { useSignInWithEmailAndPassword } from "react-firebase-hooks/auth";
+
 import facebookLetter from "../../assets/images/facebookLetter.png";
 import googleLetter from "../../assets/images/googleLetter.png";
-
-import { FadeIn, SlideInUp } from "../../assets/animations/AnimationsList";
+import { FadeIn, SlideInUp } from "../../utils/AnimationsList";
 import {
   SecondScreen,
   Header,
@@ -14,10 +17,45 @@ import {
   FormBox,
 } from "./styles/SignStyle";
 
-import { Link } from "react-router-dom";
 import SignInForm from "./components/SignInForm";
+import { auth } from "../../services/firebaseConfig";
+import { toast } from "react-toastify";
 
 export default function SignIn() {
+  const navigate = useNavigate();
+  const [isDisable, setIsDisable] = useState(false);
+  const [formData, setFormData] = useState({
+    email: "",
+    password: "",
+  });
+  const [signInWithEmailAndPassword, user, loading, error] =
+    useSignInWithEmailAndPassword(auth);
+
+  async function submitEmailSignIn(e) {
+    setIsDisable(true);
+    e.preventDefault();
+
+    const result = await signInWithEmailAndPassword(
+      formData.email,
+      formData.password
+    );
+
+    setIsDisable(false);
+    if (result) {
+      navigate("/register");
+    }
+  }
+
+  useEffect(() => {
+    if (error?.message === "Firebase: Error (auth/wrong-password).") {
+      toast("Senha incorreta");
+    }
+
+    if (error?.message === "Firebase: Error (auth/user-not-found).") {
+      toast("Email não cadastrado");
+    }
+  }, [error]);
+
   return (
     <SecondScreen>
       <Header>
@@ -38,7 +76,12 @@ export default function SignIn() {
             <Line />
           </Break>
           <FormBox screen={"in"}>
-            <SignInForm />
+            <SignInForm
+              submitSign={submitEmailSignIn}
+              data={formData}
+              setData={setFormData}
+              isDisable={isDisable}
+            />
           </FormBox>
           <Link to="/sign-up" style={{ textDecoration: "none" }}>
             Primeira vez?
