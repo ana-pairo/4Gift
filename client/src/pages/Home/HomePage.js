@@ -2,6 +2,8 @@
 // import { Navigate } from "react-router-dom";
 // import { AuthContext } from "../../contexts/AuthContext";
 import styled from "styled-components";
+import Header from "../commom/Header";
+import SearchBox from "../commom/Search";
 
 export default function Home() {
   // const { userData } = useContext(AuthContext);
@@ -14,6 +16,8 @@ export default function Home() {
 
   return (
     <>
+      <Header generic={false}></Header>
+      <SearchBox />
       <Teste>ola</Teste>
     </>
   );

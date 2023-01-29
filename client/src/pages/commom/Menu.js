@@ -36,6 +36,8 @@ const Menuwrapper = styled.div`
     left: 0;
 
     box-shadow: 0 0px 10px 40px #ededed;
+
+    z-index: 1;
   }
 `;
 
