@@ -1,31 +1,36 @@
-import { useContext } from "react";
-import styled from "styled-components";
+import { useContext, useState } from "react";
 
 import { BiTrash } from "react-icons/bi";
 import { AiOutlineEdit } from "react-icons/ai";
 
-import Menu from "../commom/Menu";
 import {
   AvatarContainer,
   AvatarOptions,
   AvatarWrapper,
-  ContainerWrapper,
-} from "../commom/styles/Container";
+} from "../commom/styles/Avatar";
 import avatar from "../../assets/images/avatar.png";
 
-import { AuthContext } from "../../contexts/AuthContext";
+import { Greeting } from "../commom/styles/Greeting";
+import { PageTitle } from "../commom/styles/PageTitle";
+import { FormButton, FormWrapper } from "./styles/AccountPageStyle";
+import { formTheme } from "../Sign/components/FormTheme";
+import { TextField, ThemeProvider } from "@mui/material";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 
 export default function Account() {
-  const { userData } = useContext(AuthContext);
+  const [value, setValue] = useState(null);
+
   return (
-    <ContainerWrapper>
+    <>
       <AvatarContainer>
         <AvatarWrapper>
-          {userData.photoURL ? (
-            <img src={userData.photoURL} />
-          ) : (
-            <img src={avatar} />
-          )}
+          {/* {userData?.photoURL ? (
+          <img alt="profile avatar" src={userData.photoURL} />
+        ) : ( */}
+          <img alt="default profile avatar" src={avatar} />
+          {/* )} */}
           <AvatarOptions type={"delete"}>
             <BiTrash size={"70%"} color={"#ededed"} />
           </AvatarOptions>
@@ -34,17 +39,59 @@ export default function Account() {
           </AvatarOptions>
         </AvatarWrapper>
       </AvatarContainer>
+      <Greeting>
+        Olá
+        {/* {userData.displayName ? "Olá, " + userData.displayName : "Olá"}*/}
+      </Greeting>
 
-      <Teste>oi</Teste>
+      <PageTitle>
+        Informações do perfil
+        <div>
+          <AiOutlineEdit size={"30px"} color={"#DFB068"} />
+        </div>
+      </PageTitle>
 
-      <Menu />
-    </ContainerWrapper>
+      <FormWrapper>
+        <ThemeProvider theme={formTheme}>
+          <TextField
+            required
+            // disabled={isDisable}
+            name="displayName"
+            // value={data.email}
+            // onChange={handleFormData}
+            label="Apelido:"
+            type="text"
+            variant="standard"
+            sx={{ mb: "10px" }}
+          />
+
+          <TextField
+            required
+            // disabled={isDisable}
+            name="phoneNumber"
+            label="Telefone:"
+            type="number"
+            variant="standard"
+            sx={{ mb: "30px" }}
+          />
+
+          <LocalizationProvider dateAdapter={AdapterDayjs} required>
+            <DatePicker
+              format="dd-MM-yyyy"
+              label="Data de aniversário: *"
+              value={value}
+              onChange={(newValue) => {
+                setValue(newValue);
+              }}
+              renderInput={(params) => (
+                <TextField {...params} helperText={null} />
+              )}
+            />
+          </LocalizationProvider>
+        </ThemeProvider>
+
+        <FormButton type="submit">Salvar</FormButton>
+      </FormWrapper>
+    </>
   );
 }
-
-const Teste = styled.div`
-  height: 1000px;
-  background-color: black;
-  width: 90vw;
-  margin-top: 10px;
-`;
