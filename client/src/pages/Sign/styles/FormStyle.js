@@ -41,15 +41,19 @@ const SubmitButton = styled.button`
     height: 50px;
     margin-top: 15px;
 
-    background-color: #ededed;
     border-radius: 10px;
-    border: none;
+    border: 1px solid #1f3b62;
+    border: ${(props) =>
+      props.disabled ? "1px solid rgb(31,59,98, 0.5)" : "1px solid #1f3b62"};
 
     display: flex;
     align-items: center;
     justify-content: center;
 
-    color: #1f3b62;
+    background-color: ${(props) =>
+      props.disabled ? "rgb(31,59,98, 0.5)" : "#1f3b62"};
+
+    color: #ffffff;
     font-size: 20px;
     font-weight: 700;
   }
