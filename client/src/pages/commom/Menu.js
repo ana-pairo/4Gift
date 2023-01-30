@@ -35,7 +35,7 @@ const Menuwrapper = styled.div`
     bottom: 0;
     left: 0;
 
-    box-shadow: 0 0px 10px 40px #ededed;
+    box-shadow: 0 0px 10px 5px #ededed;
 
     z-index: 1;
   }
@@ -67,7 +67,7 @@ const HomeWrapper = styled.div`
 
       border-radius: 100%;
       background: radial-gradient(#85a3cc, #1f3b62);
-      box-shadow: 0 -5px 4px 4px #ededed;
+      box-shadow: 0 -5px 10px 5px #ededed;
     }
   }
 `;
