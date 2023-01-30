@@ -11,7 +11,7 @@ import LogoutModal from "./ModalList";
 export default function Menu() {
   const navigate = useNavigate();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [isModalOpen, setIsModalOpen] = useState(true);
+  const [isModalOpen, setIsModalOpen] = useState(false);
   return (
     <>
       <ClickAwayListener
@@ -43,6 +43,7 @@ export default function Menu() {
                 color={"#ededed"}
                 onClick={() => {
                   setIsMenuOpen(false);
+                  setIsModalOpen(true);
                   // navigate("/");
                   //TO DO
                   // LIMPAR STORAGE
@@ -74,7 +75,7 @@ export default function Menu() {
           </HomeWrapper>
         </Menuwrapper>
       </ClickAwayListener>
-      {isModalOpen ? <LogoutModal /> : ""}
+      {isModalOpen ? <LogoutModal setIsModalOpen={setIsModalOpen} /> : ""}
     </>
   );
 }

@@ -1,15 +1,38 @@
+import { ClickAwayListener } from "@mui/base";
+import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 
-export default function LogoutModal() {
+export default function LogoutModal({ setIsModalOpen }) {
+  const navigate = useNavigate();
   return (
     <TransparencyWrapper>
-      <ModalWrapper>
-        <ModalTitle>Deseja sair?</ModalTitle>
-        <ButtonsWrapper>
-          <CancelButton>Cancelar</CancelButton>
-          <ConfirmButton>Sim</ConfirmButton>
-        </ButtonsWrapper>
-      </ModalWrapper>
+      <ClickAwayListener
+        onClickAway={() => {
+          setIsModalOpen(false);
+        }}
+      >
+        <ModalWrapper>
+          <ModalTitle>Deseja sair?</ModalTitle>
+          <ButtonsWrapper>
+            <CancelButton
+              onClick={() => {
+                setIsModalOpen(false);
+              }}
+            >
+              Cancelar
+            </CancelButton>
+            <ConfirmButton
+              onClick={() => {
+                setIsModalOpen(false);
+                navigate("/");
+                //TO DO LIMPAR STORAGE
+              }}
+            >
+              Sim
+            </ConfirmButton>
+          </ButtonsWrapper>
+        </ModalWrapper>
+      </ClickAwayListener>
     </TransparencyWrapper>
   );
 }
@@ -38,7 +61,6 @@ const ModalWrapper = styled.div`
 
     background: #ededed;
     border-radius: 20px;
-    /* border: 1px solid #dfb068; */
     box-shadow: 0px 0px 4px rgba(0, 0, 0, 0.25);
 
     display: flex;
@@ -76,6 +98,9 @@ const ButtonsWrapper = styled.div`
     display: flex;
     justify-content: space-between;
     align-items: center;
+
+    position: absolute;
+    bottom: 20px;
   }
 `;
 
@@ -85,26 +110,25 @@ const ConfirmButton = styled.button`
     height: 50px;
 
     border: none;
+    border-radius: 10px;
 
     display: flex;
-    justify-content: space-between;
+    justify-content: center;
     align-items: center;
 
     background-color: #1f3b62;
+    box-shadow: 0px 0px 10px 1px rgb(0, 0, 0, 0.5);
+
+    font-weight: 700;
+    font-size: 18px;
+    color: #ffffff;
   }
 `;
 
-const CancelButton = styled.button`
+const CancelButton = styled(ConfirmButton)`
   @media (max-width: 600px) {
-    width: 30vw;
-    height: 50px;
-
-    border: none;
-
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-
-    background-color: #1f3b62;
+    background-color: #ededed;
+    color: #1f3b62;
+    border: 1px solid #1f3b62;
   }
 `;
