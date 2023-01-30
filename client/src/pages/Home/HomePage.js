@@ -1,9 +1,7 @@
-// import { useContext } from "react";
-// import { Navigate } from "react-router-dom";
-// import { AuthContext } from "../../contexts/AuthContext";
-import styled from "styled-components";
 import Header from "../commom/Header";
 import SearchBox from "../commom/Search";
+import { CalendarWrapper, Date, Warning } from "./styles/HomePageStyle";
+import BirthDayList from "../commom/BirthdayList";
 
 export default function Home() {
   // const { userData } = useContext(AuthContext);
@@ -18,14 +16,10 @@ export default function Home() {
     <>
       <Header generic={false}></Header>
       <SearchBox />
-      <Teste>ola</Teste>
+      <CalendarWrapper>CALENDÁRIO</CalendarWrapper>
+      <Date>Sexta, 10/02</Date>
+      <Warning>Aniversário de hoje:</Warning> {/* //ISSO OU O PROXIMO */}
+      <BirthDayList />
     </>
   );
 }
-
-const Teste = styled.div`
-  height: 1000px;
-  width: 90vw;
-  background-color: aqua;
-  margin-top: 50px;
-`;

@@ -6,6 +6,7 @@ import SignIn from "../pages/Sign/SignInPage";
 import PrivatePage from "./PrivateRoutes";
 import Home from "../pages/Home/HomePage";
 import Account from "../pages/Account/AccountPage";
+import FriendsList from "../pages/FriendsList/FriendsListPage";
 
 export default function AppRoutes() {
   return (
@@ -17,6 +18,7 @@ export default function AppRoutes() {
         <Route path="/" element={<PrivatePage />}>
           <Route path="account" element={<Account />} />
           <Route path="home" element={<Home />} />
+          <Route path="friends" element={<FriendsList />} />
         </Route>
       </Routes>
     </Router>

@@ -10,7 +10,7 @@ export const FormWrapper = styled.form`
     align-items: center;
     flex-direction: column;
     margin-top: 20px;
-    padding: 0 5vw;
+    padding: 0 10vw 0 5vw;
   }
 `;
 

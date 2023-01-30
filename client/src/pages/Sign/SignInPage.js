@@ -57,13 +57,16 @@ export default function SignIn() {
     toast("Funcionalidade em progresso! Tente com outra opção");
   }
 
-  return signed ? (
-    userData.displayName ? (
-      <Navigate to="/home" />
-    ) : (
-      <Navigate to="/account" />
-    )
-  ) : (
+  // signed ? (
+  //   userData.displayName ? (
+  //     // <Navigate to="/home" />
+  //     ""
+  //   ) : (
+  //     <Navigate to="/account" />
+  //   )
+  // ) :
+
+  return (
     <SecondScreen>
       <Header>
         <FadeIn>

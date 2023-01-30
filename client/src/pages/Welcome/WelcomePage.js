@@ -19,9 +19,12 @@ export default function Welcome() {
   const { signed } = useContext(AuthContext);
   const navigate = useNavigate();
 
-  return signed ? (
-    <Navigate to="/home" />
-  ) : (
+  // signed ? (
+  //   // <Navigate to="/home" />
+  //   ""
+  // ) : (
+
+  return (
     <FadeIn>
       <FirstScreen>
         <Header>
