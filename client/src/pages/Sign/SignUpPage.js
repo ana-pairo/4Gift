@@ -60,9 +60,12 @@ export default function SignUp() {
     toast("Funcionalidade em progresso! Tente com outra opção");
   }
 
-  return signed ? (
-    <Navigate to="/home" />
-  ) : (
+  // signed ? (
+  //   // <Navigate to="/home" />
+  //   ""
+  // ) :
+
+  return (
     <SecondScreen>
       <Header>
         <FadeIn>

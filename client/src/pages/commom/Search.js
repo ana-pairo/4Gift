@@ -26,7 +26,7 @@ const SearchWrapper = styled.div`
     width: 100vw;
     height: fit-content; //UM OU OUTRO QD ABRIR A CAIXA
     /* height: 200px; */
-    margin-top: 20px;
+    margin: 5vh 0;
     padding: 0 5vw;
     position: relative;
 
@@ -63,7 +63,7 @@ const SearchInput = styled.input`
     background: #ffffff;
     box-shadow: 0px 0px 10px 1px rgba(0, 0, 0, 0.5);
     border-radius: 20px;
-    padding: 0 11vw 0 5vw;
+    padding: 0 12vw 0 5vw;
 
     font-size: 19px;
     color: rgba(31, 59, 98, 0.5);

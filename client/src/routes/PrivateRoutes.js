@@ -7,12 +7,20 @@ import { ContainerWrapper } from "../pages/commom/styles/Container";
 export default function PrivatePage() {
   const { signed } = useContext(AuthContext);
 
-  return signed ? (
+  return (
     <ContainerWrapper>
       <Outlet />
       <Menu />
     </ContainerWrapper>
-  ) : (
-    <Navigate to="/" />
   );
+
+  // signed ? (
+  //   <ContainerWrapper>
+  //     <Outlet />
+  //     <Menu />
+  //   </ContainerWrapper>
+  // )
+  // : (
+  //   <Navigate to="/" />
+  // );
 }

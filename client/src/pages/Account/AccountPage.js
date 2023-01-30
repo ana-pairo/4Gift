@@ -62,7 +62,7 @@ export default function Account() {
             label="Apelido:"
             type="text"
             variant="standard"
-            sx={{ mb: "10px" }}
+            sx={{ mb: "10px", width: "100%" }}
           />
 
           <TextField
@@ -72,7 +72,7 @@ export default function Account() {
             label="Telefone:"
             type="number"
             variant="standard"
-            sx={{ mb: "30px" }}
+            sx={{ mb: "30px", width: "100%" }}
           />
 
           <LocalizationProvider dateAdapter={AdapterDayjs} required>
