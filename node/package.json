@@ -13,7 +13,11 @@
     "test": "npm run dev:load-envs npx jest",
     "coverage": "npm run test -- --coverage"
   },
-  "keywords": ["gift", "birthday", "calendar"],
+  "keywords": [
+    "gift",
+    "birthday",
+    "calendar"
+  ],
   "author": "ana-pairo",
   "license": "ISC",
   "prisma": {
@@ -25,6 +29,7 @@
     "dotenv-cli": "^7.0.0",
     "dotenv-expand": "^10.0.0",
     "express": "^4.18.2",
+    "http-status": "^1.6.2",
     "pg": "^8.9.0"
   },
   "devDependencies": {
