@@ -4,10 +4,21 @@
   "description": "",
   "main": "server",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node ./src/server",
+    "dev": "NODE_ENV=development nodemon ./src/server.ts",
+    "dev:load-envs": "dotenv -e .env.development",
+    "dev:migration:generate": "npm run dev:load-envs prisma generate",
+    "dev:migration:run": "npm run dev:load-envs prisma migrate dev",
+    "dev:seed": "npm run dev:load-envs prisma db seed",
+    "test": "npm run dev:load-envs npx jest",
+    "coverage": "npm run test -- --coverage"
   },
+  "keywords": ["gift", "birthday", "calendar"],
   "author": "ana-pairo",
   "license": "ISC",
+  "prisma": {
+    "seed": "npm run dev:load-envs -- ts-node prisma/seed.ts"
+  },
   "dependencies": {
     "cors": "^2.8.5",
     "dotenv": "^16.0.3",
