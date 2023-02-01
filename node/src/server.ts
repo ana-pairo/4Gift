@@ -1,5 +1,5 @@
-import { loadEnv } from "./config/envs";
 import app from "./app";
+import { loadEnv } from "./config/envs";
 
 loadEnv();
 
