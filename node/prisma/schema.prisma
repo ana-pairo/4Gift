@@ -1,0 +1,103 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Users {
+  id               Int                @id @default(autoincrement())
+  email            String             @unique @db.VarChar(255)
+  displayName      String?            @db.VarChar(255)
+  accessToken      String
+  photoURL         String?
+  birthday         DateTime?
+  phoneNumber      String?            @db.VarChar(255)
+  Address          Address[]
+  followed         Follows[]          @relation("followed")
+  follower         Follows[]          @relation("follower")
+  user             Tokens[]           @relation("user")
+  requester        Tokens[]           @relation("requester")
+  Stores           Stores[]
+  createdAt        DateTime           @default(now())
+  updatedAt        DateTime           @updatedAt
+  relativesContact relativesContact[]
+}
+
+model Address {
+  id            Int      @id @default(autoincrement())
+  alias         String   @db.VarChar(255)
+  cep           String   @db.VarChar(255)
+  street        String   @db.VarChar(255)
+  city          String   @db.VarChar(255)
+  state         String   @db.VarChar(255)
+  number        String?  @db.VarChar(255)
+  neighborhood  String   @db.VarChar(255)
+  addressDetail String?  @db.VarChar(255)
+  Users         Users    @relation(fields: [userId], references: [id])
+  userId        Int
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+}
+
+model Stores {
+  id           Int            @id @default(autoincrement())
+  name         String         @db.VarChar(255)
+  Users        Users          @relation(fields: [userId], references: [id])
+  userId       Int
+  StoreContact StoreContact[]
+  createdAt    DateTime       @default(now())
+  updatedAt    DateTime       @updatedAt
+}
+
+model StoreContact {
+  id        Int               @id @default(autoincrement())
+  Stores    Stores            @relation(fields: [storeId], references: [id])
+  storeId   Int
+  contact   String
+  type      StoreContactTypes
+  createdAt DateTime          @default(now())
+  updatedAt DateTime          @updatedAt
+}
+
+enum StoreContactTypes {
+  INSTAGRAM
+  PHONE
+  SITE
+  OTHERS
+}
+
+model relativesContact {
+  id           Int      @id @default(autoincrement())
+  name         String   @db.VarChar(255)
+  Users        Users    @relation(fields: [userId], references: [id])
+  userId       Int
+  phoneNumber  String   @db.VarChar(255)
+  relationship String?  @db.VarChar(255)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
+
+model Follows {
+  id         Int      @id @default(autoincrement())
+  followed   Users    @relation("followed", fields: [followedId], references: [id])
+  followedId Int
+  follower   Users    @relation("follower", fields: [followerId], references: [id])
+  followerId Int
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+}
+
+model Tokens {
+  id          Int      @id @default(autoincrement())
+  token       String
+  user        Users    @relation("user", fields: [userId], references: [id])
+  userId      Int
+  requester   Users    @relation("requester", fields: [requesterId], references: [id])
+  requesterId Int
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
