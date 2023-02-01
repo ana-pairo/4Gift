@@ -3,10 +3,21 @@ import { connectDb } from "../config/database";
 
 const prisma = connectDb();
 
-async function getUserByToken(accessToken: string) {
+async function findUserByToken(accessToken: string) {
   return prisma.users.findFirst({
     where: {
       accessToken,
+    },
+    include: {
+      follower: true,
+    },
+  });
+}
+
+async function findUserById(id: number) {
+  return prisma.users.findFirst({
+    where: {
+      id,
     },
   });
 }
@@ -22,7 +33,7 @@ async function upsertUser(user: Prisma.UsersCreateInput) {
 }
 
 const usersRepository = {
-  getUserByToken,
+  findUserByToken,
   upsertUser,
 };
 

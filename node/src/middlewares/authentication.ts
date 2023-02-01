@@ -1,6 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 import httpStatus from "http-status";
-import { unauthorizedError } from "../errors/unauthorized.error";
+import { unauthorizedError } from "../errors";
+
 import usersRepository from "../repositories/users.repository";
 
 export async function authToken(
@@ -15,7 +16,7 @@ export async function authToken(
   const token = header.replace("Bearer ", "");
 
   try {
-    const { id } = await usersRepository.getUserByToken(token);
+    const { id } = await usersRepository.findUserByToken(token);
 
     if (!id) return generateUnauthorizedResponse(res);
 

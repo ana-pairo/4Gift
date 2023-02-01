@@ -1,15 +1,9 @@
 import express from "express";
+import { authToken } from "../../middlewares/authentication";
+import { getUser } from "./users.controller";
 
 const router = express.Router();
 
-router
-  .post("/", (_req, res) => {
-    console.log("post users");
-    res.sendStatus(200);
-  })
-  .get("/", (_req, res) => {
-    console.log("get users");
-    res.sendStatus(200);
-  });
+router.get("/", authToken, getUser);
 
 export default router;
