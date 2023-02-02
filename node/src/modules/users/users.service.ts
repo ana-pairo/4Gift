@@ -6,10 +6,11 @@ export async function getUserByToken(acessToken: string) {
 
   if (!user) throw notFoundError();
 
-  const { email, displayName, phoneNumber, photoURL, birthday, follower } =
+  const { id, email, displayName, phoneNumber, photoURL, birthday, follower } =
     user;
 
   const userData = {
+    id,
     email,
     displayName,
     phoneNumber,
@@ -21,8 +22,11 @@ export async function getUserByToken(acessToken: string) {
   return userData;
 }
 
+export async function createUser() { }
+
 const usersService = {
   getUserByToken,
+  createUser,
 };
 
 export default usersService;

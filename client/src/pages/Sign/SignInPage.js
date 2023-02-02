@@ -51,6 +51,10 @@ export default function SignIn() {
 
     if (result.check) navigate("/home");
 
+    if (result.error === "user-registration-failed") {
+      return toast("Erro! Não foi possível cadastrar sua conta");
+    }
+
     if (result.error) toast("Erro! Por favor tente novamente mais tarde");
   }
 

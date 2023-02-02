@@ -1,9 +1,14 @@
+import useUser from "../hooks/api/useUser";
+import useSaveUser from "../hooks/api/useSaveUser";
 import { createContext, useEffect, useState } from "react";
 const UserContext = createContext();
+
 export default UserContext;
 
 export function UserProvider({ children }) {
   const [userData, setUserData] = useState(null);
+  const { user, getUser } = useUser();
+  const { saveUser } = useSaveUser();
 
   useEffect(() => {
     const sessionToken = localStorage.getItem("@Auth:token");
@@ -25,18 +30,22 @@ export function UserProvider({ children }) {
     localStorage.clear();
   }
 
-  //  async function checkDatabase(){
-  //    AVERIGUA O USER, PEGA OU CRIA O USER
-  //CONECTAR COM O BANCO
-  //GET USER PELO TOKEN PRIMEIRO
-  //--> SE RETORNAR ERRO
-  //POST USER
-  //SETUSERDATA
-  //CREATELOCALSTORAGE
-  //--> SE RETORNAR UM USER
-  //SETUSERDATA
-  //CREATELOCALSTORAGE
-  // }
+  async function checkAndSaveUserRegistration(body) {
+    console.log(body);
+    try {
+      await getUser();
+    } catch (error) {
+      console.log(user);
+
+      if (!user) {
+        await saveUser(body);
+        return;
+      }
+
+      setUserData({ ...user });
+      updateLocalStorage(user);
+    }
+  }
 
   return (
     <UserContext.Provider
@@ -46,6 +55,7 @@ export function UserProvider({ children }) {
         createLocalStorage,
         updateLocalStorage,
         cleanLocalStorage,
+        checkAndSaveUserRegistration,
       }}
     >
       {children}

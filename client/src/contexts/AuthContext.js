@@ -1,4 +1,4 @@
-import { createContext, useContext, useEffect, useState } from "react";
+import { createContext, useContext } from "react";
 import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
@@ -7,6 +7,7 @@ import {
   signOut,
 } from "firebase/auth";
 
+import useSaveUser from "../hooks/api/useSaveUser";
 import { auth } from "../services/firebaseConfig";
 import { Navigate } from "react-router-dom";
 import UserContext from "./UserContext";
@@ -14,13 +15,18 @@ import UserContext from "./UserContext";
 export const AuthContext = createContext({});
 
 export default function AuthProvider({ children }) {
+  const { saveUser } = useSaveUser();
   const googleProvider = new GoogleAuthProvider();
-  const { setUserData, cleanLocalStorage } = useContext(UserContext);
-  //  const { CHECKDATABASE } = useContext(UserContext);
+  const {
+    setUserData,
+    cleanLocalStorage,
+    createLocalStorage,
+    checkAndSaveUserRegistration,
+  } = useContext(UserContext);
 
   async function SignIn({ type, email, password }) {
     let response;
-    let tokenAcess;
+    let accessToken;
     let firebaseResult;
 
     try {
@@ -36,12 +42,26 @@ export default function AuthProvider({ children }) {
         );
       }
 
-      tokenAcess = firebaseResult?.user?.tokenAcess;
+      accessToken = firebaseResult?.user?.accessToken;
 
       response = {
         check: true,
         error: false,
       };
+
+      createLocalStorage(firebaseResult.user, accessToken);
+
+      const { displayName, photoURL, phoneNumber } = firebaseResult?.user;
+
+      const databaseResponse = await checkAndSaveUserRegistration({
+        accessToken,
+        email: firebaseResult.user.email,
+        displayName,
+        photoURL,
+        phoneNumber,
+      });
+
+      if (databaseResponse?.error) response = { ...databaseResponse };
     } catch (error) {
       response = {
         check: false,
@@ -49,14 +69,11 @@ export default function AuthProvider({ children }) {
       };
     }
 
-    //CHAMAR FUNÇÃO USERCONTEXT CHECKDATABASE
-
     return response;
   }
 
   async function SignUpEmail({ email, password }) {
     let response;
-    let tokenAcess;
     try {
       const firebaseResult = await createUserWithEmailAndPassword(
         auth,
@@ -64,10 +81,16 @@ export default function AuthProvider({ children }) {
         password
       );
 
-      tokenAcess = firebaseResult?.user?.tokenAcess;
-      console.log(tokenAcess);
+      const accessToken = firebaseResult.user.accessToken;
 
-      //CHAMAR FUNÇÃO USERCONTEXT CHECKDATABASE
+      const body = {
+        email,
+        accessToken,
+      };
+
+      await saveUser(body);
+
+      createLocalStorage(firebaseResult.user, accessToken);
 
       response = {
         check: true,

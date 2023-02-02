@@ -47,6 +47,9 @@ export default function SignUp() {
       toast("Email já cadastrado");
 
     if (result.error === "auth/wrong-password") toast("Senha incorreta");
+
+    if (result.error === "user-registration-failed")
+      toast("Erro! Não foi possível cadastrar sua conta");
   }
 
   async function submitGoogleSignIn() {

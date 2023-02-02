@@ -13,3 +13,8 @@ export async function getUser(req: Request, res: Response) {
     return res.sendStatus(httpStatus.NOT_FOUND);
   }
 }
+
+export async function postUser(req: Request, res: Response) {
+  try {
+  } catch (error) {}
+}
