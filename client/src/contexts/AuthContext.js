@@ -1,4 +1,4 @@
-import { createContext, useEffect, useState } from "react";
+import { createContext, useContext, useEffect, useState } from "react";
 import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
@@ -9,127 +9,85 @@ import {
 
 import { auth } from "../services/firebaseConfig";
 import { Navigate } from "react-router-dom";
+import UserContext from "./UserContext";
 
 export const AuthContext = createContext({});
 
 export default function AuthProvider({ children }) {
   const googleProvider = new GoogleAuthProvider();
-  const [userData, setUserData] = useState(null);
+  const { setUserData, cleanLocalStorage } = useContext(UserContext);
+  //  const { CHECKDATABASE } = useContext(UserContext);
 
-  useEffect(() => {
-    const sessionToken = localStorage.getItem("@Auth:token");
-    const sessionUser = JSON.parse(localStorage.getItem("@Auth:user"));
-
-    if (sessionToken && sessionUser) setUserData({ ...sessionUser });
-  }, []);
-
-  async function SignInGoogle() {
+  async function SignIn({ type, email, password }) {
     let response;
+    let tokenAcess;
+    let firebaseResult;
+
     try {
-      const result = await signInWithPopup(auth, googleProvider);
-
-      if (result) {
-        const { displayName, phoneNumber, photoURL, accessToken } = result.user;
-
-        setUserData({
-          displayName,
-          phoneNumber,
-          photoURL,
-          birthday: null,
-        });
-
-        localStorage.setItem(
-          "@Auth:user",
-          JSON.stringify({
-            displayName,
-            phoneNumber,
-            photoURL,
-            birthday: null,
-          })
-        );
-        localStorage.setItem("@Auth:token", accessToken);
-
-        return (response = {
-          check: true,
-          error: false,
-        });
+      if (type === "Google") {
+        firebaseResult = await signInWithPopup(auth, googleProvider);
       }
+
+      if (type === "Email") {
+        firebaseResult = await signInWithEmailAndPassword(
+          auth,
+          email,
+          password
+        );
+      }
+
+      tokenAcess = firebaseResult?.user?.tokenAcess;
+
+      response = {
+        check: true,
+        error: false,
+      };
     } catch (error) {
-      const errorCode = error.code;
-      return (response = {
+      response = {
         check: false,
-        error: errorCode,
-      });
+        error: error.code,
+      };
     }
+
+    //CHAMAR FUNÇÃO USERCONTEXT CHECKDATABASE
+
+    return response;
   }
 
-  async function SignInEmail(email, password) {
+  async function SignUpEmail({ email, password }) {
     let response;
+    let tokenAcess;
     try {
-      const result = await signInWithEmailAndPassword(auth, email, password);
-
-      if (result) {
-        const { displayName, phoneNumber, photoURL, accessToken } = result.user;
-
-        setUserData({
-          displayName,
-          phoneNumber,
-          photoURL,
-          birthday: null,
-        });
-
-        localStorage.setItem(
-          "@Auth:user",
-          JSON.stringify({
-            displayName,
-            phoneNumber,
-            photoURL,
-            birthday: null,
-          })
-        );
-        localStorage.setItem("@Auth:token", accessToken);
-
-        return (response = {
-          check: true,
-          error: false,
-        });
-      }
-    } catch (error) {
-      const errorCode = error.code;
-      return (response = {
-        check: false,
-        error: errorCode,
-      });
-    }
-  }
-
-  async function SignUpEmail(email, password) {
-    let response;
-    try {
-      const result = await createUserWithEmailAndPassword(
+      const firebaseResult = await createUserWithEmailAndPassword(
         auth,
         email,
         password
       );
 
-      if (result) {
-        return (response = {
-          check: true,
-          error: false,
-        });
-      }
+      tokenAcess = firebaseResult?.user?.tokenAcess;
+      console.log(tokenAcess);
+
+      //CHAMAR FUNÇÃO USERCONTEXT CHECKDATABASE
+
+      response = {
+        check: true,
+        error: false,
+      };
     } catch (error) {
-      const errorCode = error.code;
-      return (response = {
+      response = {
         check: false,
-        error: errorCode,
-      });
+        error: error.code,
+      };
     }
+
+    return response;
   }
 
   async function SignOut() {
-    localStorage.clear();
+    cleanLocalStorage();
+
     setUserData(null);
+
     try {
       await signOut(auth);
     } catch (error) {
@@ -140,17 +98,52 @@ export default function AuthProvider({ children }) {
   }
 
   return (
-    <AuthContext.Provider
-      value={{
-        SignInEmail,
-        SignUpEmail,
-        SignInGoogle,
-        SignOut,
-        signed: !!userData,
-        userData,
-      }}
-    >
+    <AuthContext.Provider value={{ SignIn, SignUpEmail, SignOut }}>
       {children}
     </AuthContext.Provider>
   );
 }
+
+// async function SignInGoogle() {
+//   let response;
+//   let tokenAcess;
+//   try {
+//     const result = await signInWithPopup(auth, googleProvider);
+
+//     tokenAcess = result.user.tokenAcess;
+
+//     response = {
+//       check: true,
+//       error: false,
+//     };
+//   } catch (error) {
+//     response = {
+//       check: false,
+//       error: error.code,
+//     };
+//   }
+
+//   //CHAMA FUNÇÃO CHECKDATABASE
+// }
+
+// async function SignInEmail(email, password) {
+//   let response;
+//   let tokenAcess;
+//   try {
+//     const result = await signInWithEmailAndPassword(auth, email, password);
+
+//     tokenAcess = result.user.tokenAcess;
+
+//     return (response = {
+//       check: true,
+//       error: false,
+//     });
+//   } catch (error) {
+//     response = {
+//       check: false,
+//       error: error.code,
+//     };
+//   }
+
+//   //FUNÇÃO QUE CONECTA COM O BANCO E FAZ ESSA VALIDAÇÃO
+// }

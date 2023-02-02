@@ -1,4 +1,4 @@
-import { Link, Navigate, useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useContext, useState } from "react";
 
 import facebookLetter from "../../assets/images/facebookLetter.png";
@@ -21,8 +21,7 @@ import { toast } from "react-toastify";
 import { AuthContext } from "../../contexts/AuthContext";
 
 export default function SignIn() {
-  const { SignInEmail, signed, userData, SignInGoogle } =
-    useContext(AuthContext);
+  const { SignIn } = useContext(AuthContext);
   const navigate = useNavigate();
   const [isDisable, setIsDisable] = useState(false);
   const [formData, setFormData] = useState({
@@ -34,7 +33,9 @@ export default function SignIn() {
     setIsDisable(true);
     e.preventDefault();
 
-    const result = await SignInEmail(formData.email, formData.password);
+    const { email, password } = formData;
+
+    const result = await SignIn({ type: "Email", email, password });
 
     setIsDisable(false);
 
@@ -46,7 +47,7 @@ export default function SignIn() {
   }
 
   async function submitGoogleSignIn() {
-    const result = await SignInGoogle();
+    const result = await SignIn({ type: "Google" });
 
     if (result.check) navigate("/home");
 
@@ -56,15 +57,6 @@ export default function SignIn() {
   async function submitFacebookSignIn() {
     toast("Funcionalidade em progresso! Tente com outra opção");
   }
-
-  // signed ? (
-  //   userData.displayName ? (
-  //     // <Navigate to="/home" />
-  //     ""
-  //   ) : (
-  //     <Navigate to="/account" />
-  //   )
-  // ) :
 
   return (
     <SecondScreen>
