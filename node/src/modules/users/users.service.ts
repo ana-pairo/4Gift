@@ -1,3 +1,4 @@
+import { Prisma } from "@prisma/client";
 import { notFoundError } from "../../errors";
 import usersRepository from "../../repositories/users.repository";
 
@@ -22,7 +23,9 @@ export async function getUserByToken(acessToken: string) {
   return userData;
 }
 
-export async function createUser() { }
+export async function createUser(userData: Prisma.UsersCreateInput) {
+  return await usersRepository.upsertUser(userData)
+}
 
 const usersService = {
   getUserByToken,

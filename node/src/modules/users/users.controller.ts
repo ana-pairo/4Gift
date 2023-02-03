@@ -1,3 +1,4 @@
+import { Prisma } from "@prisma/client";
 import { Request, Response } from "express";
 import httpStatus from "http-status";
 import usersService from "./users.service";
@@ -15,6 +16,13 @@ export async function getUser(req: Request, res: Response) {
 }
 
 export async function postUser(req: Request, res: Response) {
+  const userData: Prisma.UsersCreateInput = req.body;
+
   try {
-  } catch (error) {}
+    await usersService.createUser(userData);
+
+    res.sendStatus(httpStatus.CREATED)
+  } catch (error) {
+    return res.sendStatus(httpStatus.BAD_REQUEST);
+  }
 }
