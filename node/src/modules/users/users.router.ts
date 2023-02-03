@@ -1,6 +1,6 @@
 import express from "express";
-import { authToken } from "../../middlewares/authentication";
-import { validateBody } from "../../middlewares/validateSchema";
+import { authToken } from "../../middlewares/authentication.middleware";
+import { validateBody } from "../../middlewares";
 import { getUser, postUser } from "./users.controller";
 
 import { postUserSCHEMA } from "./users.schema"

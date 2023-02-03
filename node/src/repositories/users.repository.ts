@@ -4,14 +4,12 @@ import { connectDb } from "../config/database";
 const prisma = connectDb();
 
 async function findUserByToken(accessToken: string) {
-  return prisma.users.findFirst({
+  const retorno = await prisma.users.findFirst({
     where: {
       accessToken,
     },
-    include: {
-      follower: true,
-    },
   });
+  return retorno;
 }
 
 async function findUserById(id: number) {
@@ -32,9 +30,7 @@ async function upsertUser(user: Prisma.UsersCreateInput) {
   });
 }
 
-const usersRepository = {
+export const usersRepository = {
   findUserByToken,
   upsertUser,
 };
-
-export default usersRepository;

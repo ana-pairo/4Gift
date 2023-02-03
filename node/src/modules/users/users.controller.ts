@@ -21,7 +21,7 @@ export async function postUser(req: Request, res: Response) {
   try {
     await usersService.createUser(userData);
 
-    res.sendStatus(httpStatus.CREATED)
+    res.sendStatus(httpStatus.CREATED);
   } catch (error) {
     return res.sendStatus(httpStatus.BAD_REQUEST);
   }
