@@ -13,7 +13,7 @@ import {
 } from "@mui/material";
 
 import { FormWrapper, SubmitButton } from "../styles/FormStyle";
-import { formTheme } from "./FormTheme";
+import { formTheme } from "../styles/FormTheme";
 
 export default function SignInForm({ submitSign, data, setData, isDisable }) {
   const [showPassword, SetShowPassword] = useState(false);

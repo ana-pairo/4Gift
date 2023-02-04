@@ -2,17 +2,21 @@ import Header from "../commom/Header";
 import SearchBox from "../commom/Search";
 import { CalendarWrapper, Date, Warning } from "./styles/HomePageStyle";
 import BirthDayList from "../commom/BirthdayList";
+import { Navigate } from "react-router-dom";
+import { toast } from "react-toastify";
 
 export default function Home() {
-  // const { userData } = useContext(AuthContext);
+  const userData = JSON.parse(localStorage.getItem("@Auth:user"));
+  const isMissingData =
+    userData?.displayName === null ||
+    userData?.birthday === null ||
+    userData?.phoneNumber === null;
 
-  // return userData.displayName && userData.birthday ? (
-  //   <div>HOME</div>
-  // ) : (
-  // <Navigate to="/account" />;
-  // );
+  toast("Por favor, termine seu cadastro.");
 
-  return (
+  return isMissingData ? (
+    <Navigate to="/account" />
+  ) : (
     <>
       <Header generic={false}></Header>
       <SearchBox />

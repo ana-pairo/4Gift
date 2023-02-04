@@ -1,17 +1,38 @@
 import { Prisma } from "@prisma/client";
 import { connectDb } from "../config/database";
+import { UpdateUserParams } from "../modules/users/users.type";
 
 const prisma = connectDb();
 
+async function createUser(user: Prisma.UsersCreateManyInput) {
+  return prisma.users.create({
+    data: {
+      ...user,
+    },
+  });
+}
+
+async function upsertUser(user: Prisma.UsersCreateManyInput) {
+  return prisma.users.upsert({
+    where: {
+      email: user.email,
+    },
+    create: {
+      ...user,
+    },
+    update: {
+      accessToken: user.accessToken,
+    },
+  });
+}
+
 async function findUserByToken(accessToken: string) {
-  return prisma.users.findFirst({
+  const retorno = await prisma.users.findFirst({
     where: {
       accessToken,
     },
-    include: {
-      follower: true,
-    },
   });
+  return retorno;
 }
 
 async function findUserById(id: number) {
@@ -22,19 +43,21 @@ async function findUserById(id: number) {
   });
 }
 
-async function upsertUser(user: Prisma.UsersCreateInput) {
-  return prisma.users.upsert({
+async function updateUser({ newUserData, userId }: UpdateUserParams) {
+  return prisma.users.update({
     where: {
-      email: user.email,
+      id: userId,
     },
-    update: user,
-    create: user,
+    data: {
+      ...newUserData,
+    },
   });
 }
 
-const usersRepository = {
+export const usersRepository = {
   findUserByToken,
+  createUser,
+  updateUser,
   upsertUser,
+  findUserById,
 };
-
-export default usersRepository;

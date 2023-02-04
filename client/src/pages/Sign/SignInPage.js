@@ -1,4 +1,4 @@
-import { Link, Navigate, useNavigate } from "react-router-dom";
+import { Link, useNavigate, Navigate } from "react-router-dom";
 import { useContext, useState } from "react";
 
 import facebookLetter from "../../assets/images/facebookLetter.png";
@@ -21,8 +21,8 @@ import { toast } from "react-toastify";
 import { AuthContext } from "../../contexts/AuthContext";
 
 export default function SignIn() {
-  const { SignInEmail, signed, userData, SignInGoogle } =
-    useContext(AuthContext);
+  let userData;
+  const { SignIn } = useContext(AuthContext);
   const navigate = useNavigate();
   const [isDisable, setIsDisable] = useState(false);
   const [formData, setFormData] = useState({
@@ -34,39 +34,58 @@ export default function SignIn() {
     setIsDisable(true);
     e.preventDefault();
 
-    const result = await SignInEmail(formData.email, formData.password);
+    const { email, password } = formData;
+
+    const result = await SignIn({ type: "Email", email, password });
+
+    userData = JSON.parse(localStorage.getItem("@Auth:user"));
+
+    const isMissingData =
+      userData?.displayName === null ||
+      userData?.birthday === null ||
+      userData?.phoneNumber === null;
 
     setIsDisable(false);
 
-    if (result.check) navigate("/home");
+    if (result.check && !isMissingData) navigate("/home");
+
+    if (result.check && isMissingData) navigate("/account");
 
     if (result.error === "auth/user-not-found") toast("Email não cadastrado");
 
     if (result.error === "auth/wrong-password") toast("Senha incorreta");
+
+    if (result.error === "database") toast("Erro! Tente novamente mais tarde.");
   }
 
   async function submitGoogleSignIn() {
-    const result = await SignInGoogle();
+    const result = await SignIn({ type: "Google" });
 
-    if (result.check) navigate("/home");
+    userData = JSON.parse(localStorage.getItem("@Auth:user"));
 
-    if (result.error) toast("Erro! Por favor tente novamente mais tarde");
+    const isMissingData =
+      userData.displayName === null ||
+      userData.birthday === null ||
+      userData.phoneNumber === null;
+
+    if (result.check && !isMissingData) navigate("/home");
+
+    if (result.check && isMissingData) navigate("/account");
+
+    if (result.error === "user-registration-failed") {
+      return toast("Erro! Não foi possível cadastrar sua conta");
+    }
+
+    if (result.error === "database") toast("Erro! Tente novamente mais tarde.");
   }
 
   async function submitFacebookSignIn() {
     toast("Funcionalidade em progresso! Tente com outra opção");
   }
 
-  // signed ? (
-  //   userData.displayName ? (
-  //     // <Navigate to="/home" />
-  //     ""
-  //   ) : (
-  //     <Navigate to="/account" />
-  //   )
-  // ) :
-
-  return (
+  return JSON.parse(localStorage.getItem("@Auth:user")) ? (
+    <Navigate to="/home" />
+  ) : (
     <SecondScreen>
       <Header>
         <FadeIn>

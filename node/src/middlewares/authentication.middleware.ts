@@ -2,7 +2,7 @@ import { NextFunction, Request, Response } from "express";
 import httpStatus from "http-status";
 import { unauthorizedError } from "../errors";
 
-import usersRepository from "../repositories/users.repository";
+import { usersRepository } from "../repositories";
 
 export async function authToken(
   req: Request,
@@ -25,7 +25,7 @@ export async function authToken(
     return generateUnauthorizedResponse(res);
   }
 
-  res.locals.acessToken = token;
+  res.locals.accessToken = token;
   next();
 }
 

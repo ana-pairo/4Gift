@@ -13,7 +13,7 @@ import avatar from "../../assets/images/avatar.png";
 import { Greeting } from "../commom/styles/Greeting";
 import { PageTitle } from "../commom/styles/PageTitle";
 import { FormButton, FormWrapper } from "./styles/AccountPageStyle";
-import { formTheme } from "../Sign/components/FormTheme";
+import { formTheme } from "../Sign/styles/FormTheme";
 import { TextField, ThemeProvider } from "@mui/material";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
