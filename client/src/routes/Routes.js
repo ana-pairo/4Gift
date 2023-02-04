@@ -12,19 +12,31 @@ import AuthProvider from "../contexts/AuthContext";
 export default function AppRoutes() {
   return (
     <Router>
-      <AuthProvider>
-        <Routes>
-          <Route path="/" element={<Welcome />} />
-          <Route path="/sign-up" element={<SignUp />} />
-          <Route path="/sign-in" element={<SignIn />} />
+      <Routes>
+        <Route path="/" element={<Welcome />} />
+        <Route
+          path="/sign-up"
+          element={
+            <AuthProvider>
+              <SignUp />
+            </AuthProvider>
+          }
+        />
+        <Route
+          path="/sign-in"
+          element={
+            <AuthProvider>
+              <SignIn />
+            </AuthProvider>
+          }
+        />
 
-          <Route path="/" element={<PrivatePage />}>
-            <Route path="account" element={<Account />} />
-            <Route path="home" element={<Home />} />
-            <Route path="friends" element={<FriendsList />} />
-          </Route>
-        </Routes>
-      </AuthProvider>
+        <Route path="/" element={<PrivatePage />}>
+          <Route path="account" element={<Account />} />
+          <Route path="home" element={<Home />} />
+          <Route path="friends" element={<FriendsList />} />
+        </Route>
+      </Routes>
     </Router>
   );
 }

@@ -40,20 +40,14 @@ export default function AuthProvider({ children }) {
           password
         );
       }
-
-      console.log("entrou no try do firebase e chegou no fim")
     } catch (error) {
       response = {
         check: false,
         error: error.code,
       };
 
-      console.log("entrou no catch do firebase")
-
       return response;
     }
-
-    console.log("passou o firebase com resultado tal e agora criando body", firebaseResult.user)
 
     const { accessToken, displayName, phoneNumber, photoURL } =
       firebaseResult.user;
@@ -66,28 +60,17 @@ export default function AuthProvider({ children }) {
       photoURL,
     };
 
-    console.log("body", body)
-
     try {
-
-      console.log("entrando no try do database")
       const userResult = await signIn(body);
-
-      console.log("passou o await signIn comr esultao", userResult)
-
-      createLocalStorage(userResult, accessToken);
-
-      console.log("local storage ")
 
       setUserData({ ...userResult });
 
-      console.log("setou o userData e acabou o try")
+      createLocalStorage(userResult, accessToken);
     } catch (error) {
       response = {
         check: false,
         error: "database",
       };
-      console.log("entrou no catch do databse com erro", error)
       return response;
     }
 
@@ -109,7 +92,6 @@ export default function AuthProvider({ children }) {
         password
       );
 
-
       const accessToken = firebaseResult.user.accessToken;
 
       body = {
@@ -126,9 +108,7 @@ export default function AuthProvider({ children }) {
 
     try {
       await signUp(body);
-
     } catch (error) {
-
       const firebaseUser = getAuth().currentUser;
 
       await deleteUser(firebaseUser);

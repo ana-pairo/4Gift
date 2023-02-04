@@ -12,19 +12,13 @@ import {
 } from "./styles/WelcomeStyle";
 
 import { Navigate, useNavigate } from "react-router-dom";
-import { useContext } from "react";
-import { AuthContext } from "../../contexts/AuthContext";
 
 export default function Welcome() {
-  const { signed } = useContext(AuthContext);
   const navigate = useNavigate();
 
-  // signed ? (
-  //   // <Navigate to="/home" />
-  //   ""
-  // ) : (
-
-  return (
+  return JSON.parse(localStorage.getItem("@Auth:user")) ? (
+    <Navigate to="/home" />
+  ) : (
     <FadeIn>
       <FirstScreen>
         <Header>

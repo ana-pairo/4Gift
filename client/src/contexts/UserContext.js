@@ -4,6 +4,7 @@ const UserContext = createContext();
 export default UserContext;
 
 export function UserProvider({ children }) {
+  let render = false;
   const [userData, setUserData] = useState(null);
 
   useEffect(() => {
@@ -11,7 +12,7 @@ export function UserProvider({ children }) {
     const sessionUser = JSON.parse(localStorage.getItem("@Auth:user"));
 
     if (sessionToken && sessionUser) setUserData({ ...sessionUser });
-  }, []);
+  }, [render]);
 
   function createLocalStorage(userData, accessToken) {
     localStorage.setItem("@Auth:user", JSON.stringify({ ...userData }));

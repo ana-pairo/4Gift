@@ -1,4 +1,4 @@
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, Navigate } from "react-router-dom";
 import { useContext, useState } from "react";
 
 import facebookLetter from "../../assets/images/facebookLetter.png";
@@ -43,14 +43,16 @@ export default function SignUp() {
       navigate("/sign-in");
     }
 
-    if (result.error === "auth/email-already-in-use") toast("Email já cadastrado");
+    if (result.error === "auth/email-already-in-use")
+      toast("Email já cadastrado");
 
     if (result.error === "auth/wrong-password") toast("Senha incorreta");
 
-    if (result.error === "user-registration-failed") toast("Erro! Não foi possível cadastrar sua conta");
+    if (result.error === "user-registration-failed")
+      toast("Erro! Não foi possível cadastrar sua conta");
 
-    if (result.error === "database") toast("Erro! Não foi possível cadastrar sua conta.");
-
+    if (result.error === "database")
+      toast("Erro! Não foi possível cadastrar sua conta.");
   }
 
   async function submitGoogleSignIn() {
@@ -65,7 +67,9 @@ export default function SignUp() {
     toast("Funcionalidade em progresso! Tente com outra opção");
   }
 
-  return (
+  return JSON.parse(localStorage.getItem("@Auth:user")) ? (
+    <Navigate to="/home" />
+  ) : (
     <SecondScreen>
       <Header>
         <FadeIn>

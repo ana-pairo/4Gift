@@ -1,4 +1,4 @@
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, Navigate } from "react-router-dom";
 import { useContext, useState } from "react";
 
 import facebookLetter from "../../assets/images/facebookLetter.png";
@@ -21,6 +21,7 @@ import { toast } from "react-toastify";
 import { AuthContext } from "../../contexts/AuthContext";
 
 export default function SignIn() {
+  let userData;
   const { SignIn } = useContext(AuthContext);
   const navigate = useNavigate();
   const [isDisable, setIsDisable] = useState(false);
@@ -37,9 +38,18 @@ export default function SignIn() {
 
     const result = await SignIn({ type: "Email", email, password });
 
+    userData = JSON.parse(localStorage.getItem("@Auth:user"));
+
+    const isMissingData =
+      userData?.displayName === null ||
+      userData?.birthday === null ||
+      userData?.phoneNumber === null;
+
     setIsDisable(false);
 
-    if (result.check) navigate("/home");
+    if (result.check && !isMissingData) navigate("/home");
+
+    if (result.check && isMissingData) navigate("/account");
 
     if (result.error === "auth/user-not-found") toast("Email não cadastrado");
 
@@ -51,7 +61,16 @@ export default function SignIn() {
   async function submitGoogleSignIn() {
     const result = await SignIn({ type: "Google" });
 
-    if (result.check) navigate("/home");
+    userData = JSON.parse(localStorage.getItem("@Auth:user"));
+
+    const isMissingData =
+      userData.displayName === null ||
+      userData.birthday === null ||
+      userData.phoneNumber === null;
+
+    if (result.check && !isMissingData) navigate("/home");
+
+    if (result.check && isMissingData) navigate("/account");
 
     if (result.error === "user-registration-failed") {
       return toast("Erro! Não foi possível cadastrar sua conta");
@@ -64,7 +83,9 @@ export default function SignIn() {
     toast("Funcionalidade em progresso! Tente com outra opção");
   }
 
-  return (
+  return JSON.parse(localStorage.getItem("@Auth:user")) ? (
+    <Navigate to="/home" />
+  ) : (
     <SecondScreen>
       <Header>
         <FadeIn>
