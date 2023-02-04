@@ -7,7 +7,7 @@ export default UserContext;
 
 export function UserProvider({ children }) {
   const [userData, setUserData] = useState(null);
-  const { user, getUser } = useUser();
+  const { user, getUser, userError } = useUser();
   const { saveUser } = useSaveUser();
 
   useEffect(() => {
@@ -18,11 +18,15 @@ export function UserProvider({ children }) {
   }, []);
 
   function createLocalStorage(userData, accessToken) {
-    localStorage.setItem("@Auth:token", accessToken);
     localStorage.setItem("@Auth:user", JSON.stringify({ ...userData }));
+    createLocalStorageToken(accessToken);
   }
 
-  function updateLocalStorage(userData) {
+  function createLocalStorageToken(accessToken) {
+    localStorage.setItem("@Auth:token", accessToken);
+  }
+
+  function updateLocalStorageUser(userData) {
     localStorage.setItem("@Auth:user", JSON.stringify({ ...userData }));
   }
 
@@ -31,20 +35,26 @@ export function UserProvider({ children }) {
   }
 
   async function checkAndSaveUserRegistration(body) {
-    console.log(body);
     try {
-      await getUser();
+      console.log(
+        "entrando no check user com token",
+        localStorage.getItem("@Auth:token")
+      );
+      const checandSeTem = await getUser();
+      console.log(checandSeTem);
     } catch (error) {
-      if (!user) {
-        const response = await saveUser(body);
-        console.log("CATCH DO CHECK E RESPOSTA DO SAVEUSER", response);
-      }
+      await saveUser(body);
+      createLocalStorageToken(body.accessToken);
     }
 
-    if (user) {
-      setUserData({ ...user });
-      updateLocalStorage(user);
-    }
+    const userResult = await getUser();
+
+    setUserData({ ...userResult });
+    updateLocalStorageUser(userResult);
+  }
+
+  async function userRegistration(body) {
+    await saveUser(body);
   }
 
   return (
@@ -53,9 +63,11 @@ export function UserProvider({ children }) {
         userData,
         setUserData,
         createLocalStorage,
-        updateLocalStorage,
+        updateLocalStorageUser,
         cleanLocalStorage,
         checkAndSaveUserRegistration,
+        userRegistration,
+        createLocalStorageToken,
       }}
     >
       {children}

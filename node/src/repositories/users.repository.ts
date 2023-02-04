@@ -4,6 +4,28 @@ import { UpdateUserParams } from "../modules/users/users.type";
 
 const prisma = connectDb();
 
+async function createUser(user: Prisma.UsersCreateManyInput) {
+  return prisma.users.create({
+    data: {
+      ...user,
+    },
+  });
+}
+
+async function upsertUser(user: Prisma.UsersCreateManyInput) {
+  return prisma.users.upsert({
+    where: {
+      email: user.email
+    },
+    create: {
+      ...user
+    },
+    update: {
+      accessToken: user.accessToken
+    }
+  })
+}
+
 async function findUserByToken(accessToken: string) {
   const retorno = await prisma.users.findFirst({
     where: {
@@ -21,18 +43,7 @@ async function findUserById(id: number) {
   });
 }
 
-async function createUser(user: Prisma.UsersCreateManyInput) {
-  return prisma.users.create({
-    data: {
-      ...user,
-    },
-  });
-}
-
-async function updateUser({
-  newUserData,
-  userId,
-}: UpdateUserParams) {
+async function updateUser({ newUserData, userId }: UpdateUserParams) {
   return prisma.users.update({
     where: {
       id: userId,
@@ -47,4 +58,5 @@ export const usersRepository = {
   findUserByToken,
   createUser,
   updateUser,
+  upsertUser
 };

@@ -3,6 +3,7 @@ import httpStatus from "http-status";
 import supertest from "supertest";
 import app from "../../src/app";
 import { prisma } from "../../src/config/database";
+import { cleanDb } from "../helper";
 import {
   createCompleteUser,
   createUser,
@@ -11,6 +12,10 @@ import {
 } from "../factories";
 
 const server = supertest(app);
+
+beforeAll(async () => {
+  await cleanDb();
+});
 
 describe("GET /users", () => {
   it("should respond with status 401 if no token is given", async () => {
@@ -153,7 +158,7 @@ describe("PUT /users", () => {
         const previousUser = await createCompleteUser();
         const token = previousUser.accessToken;
         const body = await createValidFullUserBody({
-          email: previousUser.email
+          email: previousUser.email,
         });
 
         const { displayName, photoURL, phoneNumber, birthday } = body;
