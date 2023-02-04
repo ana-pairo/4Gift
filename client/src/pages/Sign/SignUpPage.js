@@ -43,13 +43,14 @@ export default function SignUp() {
       navigate("/sign-in");
     }
 
-    if (result.error === "auth/email-already-in-use")
-      toast("Email já cadastrado");
+    if (result.error === "auth/email-already-in-use") toast("Email já cadastrado");
 
     if (result.error === "auth/wrong-password") toast("Senha incorreta");
 
-    if (result.error === "user-registration-failed")
-      toast("Erro! Não foi possível cadastrar sua conta");
+    if (result.error === "user-registration-failed") toast("Erro! Não foi possível cadastrar sua conta");
+
+    if (result.error === "database") toast("Erro! Não foi possível cadastrar sua conta.");
+
   }
 
   async function submitGoogleSignIn() {

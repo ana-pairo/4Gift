@@ -15,15 +15,15 @@ async function createUser(user: Prisma.UsersCreateManyInput) {
 async function upsertUser(user: Prisma.UsersCreateManyInput) {
   return prisma.users.upsert({
     where: {
-      email: user.email
+      email: user.email,
     },
     create: {
-      ...user
+      ...user,
     },
     update: {
-      accessToken: user.accessToken
-    }
-  })
+      accessToken: user.accessToken,
+    },
+  });
 }
 
 async function findUserByToken(accessToken: string) {
@@ -58,5 +58,6 @@ export const usersRepository = {
   findUserByToken,
   createUser,
   updateUser,
-  upsertUser
+  upsertUser,
+  findUserById,
 };

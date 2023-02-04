@@ -1,22 +1,13 @@
 import api from "./axiosService";
-import createHeader from "./header";
 
-export async function getUserData() {
-  const header = createHeader();
-  const response = await api.get("/users", header);
+export async function signUp(body) {
+  const response = await api.post("/sign/up", body);
 
   return response.data;
 }
 
-export async function save(body) {
-  const header = createHeader();
-  const response = await api.post("/users", body, header);
-
-  return response.data;
-}
-
-export async function teste() {
-  const response = await api.get("/status");
+export async function signIn(body) {
+  const response = await api.post("/sign/in", body);
 
   return response.data;
 }

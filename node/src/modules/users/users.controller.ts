@@ -5,10 +5,10 @@ import usersService from "./users.service";
 import { UsersParams } from "./users.type";
 
 export async function getUser(req: Request, res: Response) {
-  const { accessToken } = res.locals;
+  const { userId } = res.locals;
 
   try {
-    const userData = await usersService.getUserByToken(accessToken);
+    const userData = await usersService.getUserById(userId);
 
     return res.status(httpStatus.OK).send(userData);
   } catch (error) {
@@ -33,11 +33,13 @@ export async function putUser(req: Request, res: Response) {
   const newUserData: UsersParams = req.body;
 
   try {
-    const updatedUser = await usersService.updatePreviousUser({ newUserData, userId });
+    const updatedUser = await usersService.updatePreviousUser({
+      newUserData,
+      userId,
+    });
 
-    res.status(httpStatus.OK).send(updatedUser)
+    res.status(httpStatus.OK).send(updatedUser);
   } catch (error) {
     return res.sendStatus(httpStatus.BAD_REQUEST);
   }
-
 }

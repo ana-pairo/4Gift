@@ -1,5 +1,3 @@
-import useUser from "../hooks/api/useUser";
-import useSaveUser from "../hooks/api/useSaveUser";
 import { createContext, useEffect, useState } from "react";
 const UserContext = createContext();
 
@@ -7,8 +5,6 @@ export default UserContext;
 
 export function UserProvider({ children }) {
   const [userData, setUserData] = useState(null);
-  const { user, getUser, userError } = useUser();
-  const { saveUser } = useSaveUser();
 
   useEffect(() => {
     const sessionToken = localStorage.getItem("@Auth:token");
@@ -34,29 +30,6 @@ export function UserProvider({ children }) {
     localStorage.clear();
   }
 
-  async function checkAndSaveUserRegistration(body) {
-    try {
-      console.log(
-        "entrando no check user com token",
-        localStorage.getItem("@Auth:token")
-      );
-      const checandSeTem = await getUser();
-      console.log(checandSeTem);
-    } catch (error) {
-      await saveUser(body);
-      createLocalStorageToken(body.accessToken);
-    }
-
-    const userResult = await getUser();
-
-    setUserData({ ...userResult });
-    updateLocalStorageUser(userResult);
-  }
-
-  async function userRegistration(body) {
-    await saveUser(body);
-  }
-
   return (
     <UserContext.Provider
       value={{
@@ -65,8 +38,6 @@ export function UserProvider({ children }) {
         createLocalStorage,
         updateLocalStorageUser,
         cleanLocalStorage,
-        checkAndSaveUserRegistration,
-        userRegistration,
         createLocalStorageToken,
       }}
     >

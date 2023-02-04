@@ -3,8 +3,8 @@ import { notFoundError } from "../../errors";
 import { usersRepository } from "../../repositories";
 import { UpdateUserParams } from "./users.type";
 
-export async function getUserByToken(acessToken: string) {
-  const user = await usersRepository.findUserByToken(acessToken);
+export async function getUserById(userId: number) {
+  const user = await usersRepository.findUserById(userId);
 
   if (!user) throw notFoundError();
 
@@ -38,11 +38,15 @@ export async function createNewUser(userData: Prisma.UsersCreateInput) {
   return user;
 }
 
-export async function updatePreviousUser({ userId, newUserData }: UpdateUserParams) {
-  const { id, email, displayName, phoneNumber, photoURL, birthday } = await usersRepository.updateUser({
-    userId,
-    newUserData,
-  });
+export async function updatePreviousUser({
+  userId,
+  newUserData,
+}: UpdateUserParams) {
+  const { id, email, displayName, phoneNumber, photoURL, birthday } =
+    await usersRepository.updateUser({
+      userId,
+      newUserData,
+    });
 
   const user = {
     userId: id,
@@ -51,15 +55,15 @@ export async function updatePreviousUser({ userId, newUserData }: UpdateUserPara
     phoneNumber,
     photoURL,
     birthday,
-  }
+  };
 
   return user;
 }
 
 const usersService = {
-  getUserByToken,
+  getUserById,
   createNewUser,
-  updatePreviousUser
+  updatePreviousUser,
 };
 
 export default usersService;

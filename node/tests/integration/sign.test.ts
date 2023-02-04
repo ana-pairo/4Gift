@@ -103,12 +103,10 @@ describe("POST /sign/in", () => {
     it("should respond with status 200, create a new user if does not exist yet and send user data", async () => {
       const validBody = await createValidSimpleUserBody();
       const previousUsersAmount = await prisma.users.count();
-      console.log(previousUsersAmount);
 
       const response = await server.post("/sign/in").send(validBody);
 
       const nextUsersAmount = await prisma.users.count();
-      console.log(nextUsersAmount);
 
       const { id, email, displayName, phoneNumber, photoURL, birthday } =
         await prisma.users.findFirst({
@@ -127,20 +125,6 @@ describe("POST /sign/in", () => {
         photoURL,
         birthday,
       });
-    });
-
-    it("should create a new user on database if does not exist", async () => {
-      const validBody = await createValidSimpleUserBody();
-      const previousUsersAmount = await prisma.users.count();
-
-      console.log(previousUsersAmount);
-
-      await server.post("/sign/in").send(validBody);
-
-      const nextUsersAmount = await prisma.users.count();
-      console.log(nextUsersAmount);
-
-      expect(nextUsersAmount).toBe(previousUsersAmount + 1);
     });
   });
 });

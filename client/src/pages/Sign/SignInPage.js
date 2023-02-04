@@ -44,6 +44,8 @@ export default function SignIn() {
     if (result.error === "auth/user-not-found") toast("Email não cadastrado");
 
     if (result.error === "auth/wrong-password") toast("Senha incorreta");
+
+    if (result.error === "database") toast("Erro! Tente novamente mais tarde.");
   }
 
   async function submitGoogleSignIn() {
@@ -55,7 +57,7 @@ export default function SignIn() {
       return toast("Erro! Não foi possível cadastrar sua conta");
     }
 
-    if (result.error) toast("Erro! Por favor tente novamente mais tarde");
+    if (result.error === "database") toast("Erro! Tente novamente mais tarde.");
   }
 
   async function submitFacebookSignIn() {
