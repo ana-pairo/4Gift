@@ -44,24 +44,26 @@ export default function AuthProvider({ children }) {
 
       accessToken = firebaseResult?.user?.accessToken;
 
-      response = {
-        check: true,
-        error: false,
-      };
+      if (accessToken) {
+        response = {
+          check: true,
+          error: false,
+        };
 
-      createLocalStorage(firebaseResult.user, accessToken);
+        createLocalStorage(firebaseResult.user, accessToken);
 
-      const { displayName, photoURL, phoneNumber } = firebaseResult?.user;
+        const { displayName, photoURL, phoneNumber } = firebaseResult?.user;
 
-      const databaseResponse = await checkAndSaveUserRegistration({
-        accessToken,
-        email: firebaseResult.user.email,
-        displayName,
-        photoURL,
-        phoneNumber,
-      });
+        const databaseResponse = await checkAndSaveUserRegistration({
+          accessToken,
+          email: firebaseResult.user.email,
+          displayName,
+          photoURL,
+          phoneNumber,
+        });
 
-      if (databaseResponse?.error) response = { ...databaseResponse };
+        if (databaseResponse?.error) response = { ...databaseResponse };
+      }
     } catch (error) {
       response = {
         check: false,

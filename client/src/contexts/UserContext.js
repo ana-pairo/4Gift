@@ -35,13 +35,13 @@ export function UserProvider({ children }) {
     try {
       await getUser();
     } catch (error) {
-      console.log(user);
-
       if (!user) {
-        await saveUser(body);
-        return;
+        const response = await saveUser(body);
+        console.log("CATCH DO CHECK E RESPOSTA DO SAVEUSER", response);
       }
+    }
 
+    if (user) {
       setUserData({ ...user });
       updateLocalStorage(user);
     }

@@ -1,6 +1,7 @@
 import { Prisma } from "@prisma/client";
 import { notFoundError } from "../../errors";
 import { usersRepository } from "../../repositories";
+import { UpdateUserParams } from "./users.type";
 
 export async function getUserByToken(acessToken: string) {
   const user = await usersRepository.findUserByToken(acessToken);
@@ -10,7 +11,7 @@ export async function getUserByToken(acessToken: string) {
   const { id, email, displayName, phoneNumber, photoURL, birthday } = user;
 
   const userData = {
-    id,
+    userId: id,
     email,
     displayName,
     phoneNumber,
@@ -21,13 +22,44 @@ export async function getUserByToken(acessToken: string) {
   return userData;
 }
 
-export async function createUser(userData: Prisma.UsersCreateInput) {
-  return await usersRepository.upsertUser(userData);
+export async function createNewUser(userData: Prisma.UsersCreateInput) {
+  const { id, email, displayName, phoneNumber, photoURL, birthday } =
+    await usersRepository.createUser(userData);
+
+  const user = {
+    userId: id,
+    email,
+    displayName,
+    phoneNumber,
+    photoURL,
+    birthday,
+  };
+
+  return user;
+}
+
+export async function updatePreviousUser({ userId, newUserData }: UpdateUserParams) {
+  const { id, email, displayName, phoneNumber, photoURL, birthday } = await usersRepository.updateUser({
+    userId,
+    newUserData,
+  });
+
+  const user = {
+    userId: id,
+    email,
+    displayName,
+    phoneNumber,
+    photoURL,
+    birthday,
+  }
+
+  return user;
 }
 
 const usersService = {
   getUserByToken,
-  createUser,
+  createNewUser,
+  updatePreviousUser
 };
 
 export default usersService;

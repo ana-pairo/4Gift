@@ -24,7 +24,7 @@ export async function createCompleteUser() {
   const token = faker.internet.password(30);
   const displayName = faker.name.fullName();
   const photoURL = faker.internet.avatar();
-  const birthday = faker.date.birthdate({ min: 18 });
+  const birthday = faker.date.birthdate({ min: 18 }).toISOString();
   const phoneNumber = faker.phone.number("(##) 9####-####");
 
   return prisma.users.create({
@@ -37,4 +37,33 @@ export async function createCompleteUser() {
       phoneNumber,
     },
   });
+}
+
+export async function createValidFullUserBody(
+  params: Partial<Prisma.UsersCreateManyInput> = {}
+) {
+  const email = params.email ? params.email : faker.internet.email();
+  const displayName = faker.name.fullName();
+  const photoURL = faker.internet.avatar();
+  const birthday = faker.date.birthdate({ min: 18 }).toISOString();
+  const phoneNumber = faker.phone.number("(##) 9####-####");
+
+  const body = {
+    email,
+    displayName,
+    phoneNumber,
+    photoURL,
+    birthday,
+  };
+
+  return body;
+}
+
+export async function createValidSimpleUserBody() {
+  const email = faker.internet.email();
+  const accessToken = faker.internet.password(30);
+
+  const body = { email, accessToken };
+
+  return body;
 }
