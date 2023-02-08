@@ -103,7 +103,7 @@ export default function Account() {
             <img alt="default profile avatar" src={avatar} />
           )}
 
-          <AvatarOptions type={"edit"}>
+          {/* <AvatarOptions type={"edit"}>
             <AiOutlineEdit
               onClick={() => {
                 toast("Feature em desenvolvimento");
@@ -111,7 +111,7 @@ export default function Account() {
               size={"70%"}
               color={"#ededed"}
             />
-          </AvatarOptions>
+          </AvatarOptions> */}
         </AvatarWrapper>
       </AvatarContainer>
       <Greeting>
