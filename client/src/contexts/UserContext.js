@@ -1,18 +1,18 @@
 import { createContext, useEffect, useState } from "react";
-const UserContext = createContext();
 
-export default UserContext;
+export const UserContext = createContext({});
 
-export function UserProvider({ children }) {
-  let render = false;
-  const [userData, setUserData] = useState(null);
+export default function UserProvider({ children }) {
+  const [userData, setUserData] = useState(
+    JSON.parse(localStorage.getItem("@Auth:user"))
+  );
 
   useEffect(() => {
     const sessionToken = localStorage.getItem("@Auth:token");
     const sessionUser = JSON.parse(localStorage.getItem("@Auth:user"));
 
     if (sessionToken && sessionUser) setUserData({ ...sessionUser });
-  }, [render]);
+  }, []);
 
   function createLocalStorage(userData, accessToken) {
     localStorage.setItem("@Auth:user", JSON.stringify({ ...userData }));

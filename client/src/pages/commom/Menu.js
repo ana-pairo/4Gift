@@ -6,7 +6,7 @@ import { AiFillHome } from "react-icons/ai";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { ClickAwayListener } from "@mui/base";
-import LogoutModal from "./ModalList";
+import { modals } from "./ModalList";
 
 export default function Menu() {
   const navigate = useNavigate();
@@ -75,7 +75,7 @@ export default function Menu() {
           </HomeWrapper>
         </Menuwrapper>
       </ClickAwayListener>
-      {isModalOpen ? <LogoutModal setIsModalOpen={setIsModalOpen} /> : ""}
+      {isModalOpen ? <modals.Logout setIsModalOpen={setIsModalOpen} /> : ""}
     </>
   );
 }

@@ -1,8 +1,9 @@
 import { ClickAwayListener } from "@mui/base";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 import styled from "styled-components";
 
-export default function LogoutModal({ setIsModalOpen }) {
+function Logout({ setIsModalOpen }) {
   const navigate = useNavigate();
   return (
     <TransparencyWrapper>
@@ -36,6 +37,83 @@ export default function LogoutModal({ setIsModalOpen }) {
     </TransparencyWrapper>
   );
 }
+
+// async function deleteAvatarPhoto(data) {
+//   const response = await updateUser(data);
+
+//   if (updateUserError)
+//     toast("Não foi possível exluir sua imagem, tente novamente mais tarde");
+
+//   setModalResponse(false);
+//   setIsModalOpen(false);
+//   setUserData({ ...response });
+//   updateLocalStorageUser(response);
+// }
+
+// if (modalResponse) {
+//   const data = {
+//     photoURL: null,
+//   };
+
+//   deleteAvatarPhoto(data);
+// }
+
+function DeleteAvatar({
+  setUserData,
+  updateLocalStorageUser,
+  setIsModalOpen,
+  updateUser,
+  updateUserError,
+}) {
+  return (
+    <TransparencyWrapper>
+      <ClickAwayListener
+        onClickAway={() => {
+          setIsModalOpen(false);
+        }}
+      >
+        <ModalWrapper>
+          <ModalTitle>Deseja excluir sua foto?</ModalTitle>
+          <ButtonsWrapper>
+            <CancelButton
+              onClick={() => {
+                setIsModalOpen(false);
+              }}
+            >
+              Cancelar
+            </CancelButton>
+            <ConfirmButton
+              onClick={async () => {
+                const data = {
+                  photoURL: null,
+                };
+
+                const response = await updateUser(data);
+
+                if (updateUserError) {
+                  return toast(
+                    "Não foi possível exluir sua imagem, tente novamente mais tarde"
+                  );
+                }
+
+                setIsModalOpen(false);
+                updateLocalStorageUser(response);
+                setUserData({ ...response });
+              }}
+            >
+              Sim
+            </ConfirmButton>
+          </ButtonsWrapper>
+        </ModalWrapper>
+      </ClickAwayListener>
+    </TransparencyWrapper>
+  );
+}
+
+export const modals = {
+  Logout,
+  DeleteAvatar,
+};
 
 const TransparencyWrapper = styled.div`
   width: 100vw;
@@ -85,6 +163,7 @@ const ModalTitle = styled.div`
     display: flex;
     justify-content: center;
     align-items: center;
+    text-align: center;
   }
 `;
 
