@@ -11,9 +11,9 @@ import {
   deleteUser,
 } from "firebase/auth";
 
-import UserContext from "./UserContext";
 import useSignUp from "../hooks/api/useSignUp";
 import useSignIn from "../hooks/api/useSignIn";
+import { UserContext } from "./UserContext";
 
 export const AuthContext = createContext({});
 
@@ -62,6 +62,7 @@ export default function AuthProvider({ children }) {
 
     try {
       const userResult = await signIn(body);
+      console.log(userResult);
 
       setUserData({ ...userResult });
 
