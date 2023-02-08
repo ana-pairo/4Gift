@@ -1,4 +1,4 @@
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 
 import { BiTrash } from "react-icons/bi";
 import { AiOutlineEdit } from "react-icons/ai";
@@ -23,19 +23,30 @@ import { FormButton, FormWrapper } from "./styles/AccountPageStyle";
 import { formTheme } from "../Sign/styles/FormTheme";
 
 import { UserContext } from "../../contexts/UserContext";
+import { modals } from "../commom/ModalList";
+import useUpdateUser from "../../hooks/api/useUpdateUser";
+import LoadingScreen from "../commom/LoadingScreen";
 
 export default function Account() {
-  const { userData } = useContext(UserContext);
+  const teste = true;
+  const [isDisable, setIsDisable] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [modalResponse, setModalResponse] = useState(false);
+  const { userData, setUserData, updateLocalStorageUser } =
+    useContext(UserContext);
+
+  console.log(userData);
+  const { updateUser, updateUserLoading, updateUserError } = useUpdateUser();
   const isMissingData =
     userData?.displayName === null ||
     userData?.birthday === null ||
     userData?.phoneNumber === null;
 
-  if (isMissingData) toast("Por favor, termine seu cadastro.");
-
-  console.log(userData);
-  const [isDisable, setIsDisable] = useState(false);
   const [isFormDisable, setIsFormDisable] = useState(!isMissingData);
+
+  useEffect(() => {
+    if (isMissingData) toast("Por favor, termine seu cadastro.");
+  }, []);
 
   console.log(isFormDisable);
   const [formData, setFormData] = useState({
@@ -52,8 +63,19 @@ export default function Account() {
   async function submitAccountData(e) {
     e.preventDefault();
     setIsDisable(true);
+    console.log(formData);
 
-    // FUNÇÃO SALVAR OS DADOS
+    const response = await updateUser(formData);
+
+    if (updateUserError)
+      toast(
+        "Não foi possível salvar suas informações, tente novamente mais tarde"
+      );
+
+    console.log("RESPOSTA DO BANCO", response);
+
+    setUserData({ ...response });
+    updateLocalStorageUser(response);
 
     toast("Informações salvas com sucesso!");
 
@@ -66,13 +88,21 @@ export default function Account() {
       <AvatarContainer>
         <AvatarWrapper>
           {userData?.photoURL ? (
-            <img alt="profile avatar" src={userData.photoURL} />
+            <>
+              <img alt="profile avatar" src={userData.photoURL} />
+              <AvatarOptions
+                type={"delete"}
+                onClick={() => {
+                  setIsModalOpen(true);
+                }}
+              >
+                <BiTrash size={"70%"} color={"#ededed"} />
+              </AvatarOptions>
+            </>
           ) : (
             <img alt="default profile avatar" src={avatar} />
           )}
-          <AvatarOptions type={"delete"}>
-            <BiTrash size={"70%"} color={"#ededed"} />
-          </AvatarOptions>
+
           <AvatarOptions type={"edit"}>
             <AiOutlineEdit
               onClick={() => {
@@ -163,6 +193,19 @@ export default function Account() {
           </FormButton>
         )}
       </FormWrapper>
+
+      {isModalOpen ? (
+        <modals.DeleteAvatar
+          setUserData={setUserData}
+          updateLocalStorageUser={updateLocalStorageUser}
+          setIsModalOpen={setIsModalOpen}
+          updateUser={updateUser}
+          updateUserError={updateUserError}
+        />
+      ) : (
+        ""
+      )}
+      {updateUserLoading ? <LoadingScreen /> : ""}
     </>
   );
 }
