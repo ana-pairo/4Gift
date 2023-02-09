@@ -14,7 +14,7 @@ import {
 } from "@mui/material";
 
 import { FormWrapper, PasswordRules, SubmitButton } from "../styles/FormStyle";
-import { formTheme } from "./FormTheme";
+import { formTheme } from "../styles/FormTheme";
 
 export default function SignUpForm({ submitSign, data, setData, isDisable }) {
   const [showPasswords, setShowPasswords] = useState({

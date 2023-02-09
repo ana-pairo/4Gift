@@ -1,11 +1,19 @@
+import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import photo from "../../assets/images/avatar.png";
 
 export default function Header({ generic }) {
+  const navigate = useNavigate();
   return (
     <HeaderWrapper>
       <HeaderAvatar>
-        <img alt="small avatar" src={photo} />
+        <img
+          alt="small avatar"
+          src={photo}
+          onClick={() => {
+            navigate("/profile");
+          }}
+        />
       </HeaderAvatar>
       <HeaderGreeting>
         <h1>Olá, Ana Paula</h1>

@@ -1,4 +1,4 @@
-import { Link, Navigate, useNavigate } from "react-router-dom";
+import { Link, useNavigate, Navigate } from "react-router-dom";
 import { useContext, useState } from "react";
 
 import facebookLetter from "../../assets/images/facebookLetter.png";
@@ -21,7 +21,7 @@ import { toast } from "react-toastify";
 import { AuthContext } from "../../contexts/AuthContext";
 
 export default function SignUp() {
-  const { SignUpEmail, signed, SignInGoogle } = useContext(AuthContext);
+  const { SignUpEmail, SignIn } = useContext(AuthContext);
   const navigate = useNavigate();
   const [isDisable, setIsDisable] = useState(false);
   const [formData, setFormData] = useState({
@@ -33,8 +33,9 @@ export default function SignUp() {
   async function submitEmailSignUp(e) {
     setIsDisable(true);
     e.preventDefault();
+    const { email, password } = formData;
 
-    const result = await SignUpEmail(formData.email, formData.password);
+    const result = await SignUpEmail({ email, password });
 
     setIsDisable(false);
     if (result.check) {
@@ -46,10 +47,16 @@ export default function SignUp() {
       toast("Email já cadastrado");
 
     if (result.error === "auth/wrong-password") toast("Senha incorreta");
+
+    if (result.error === "user-registration-failed")
+      toast("Erro! Não foi possível cadastrar sua conta");
+
+    if (result.error === "database")
+      toast("Erro! Não foi possível cadastrar sua conta.");
   }
 
   async function submitGoogleSignIn() {
-    const result = await SignInGoogle();
+    const result = await SignIn({ type: "Google" });
 
     if (result.check) navigate("/home");
 
@@ -60,12 +67,9 @@ export default function SignUp() {
     toast("Funcionalidade em progresso! Tente com outra opção");
   }
 
-  // signed ? (
-  //   // <Navigate to="/home" />
-  //   ""
-  // ) :
-
-  return (
+  return JSON.parse(localStorage.getItem("@Auth:user")) ? (
+    <Navigate to="/home" />
+  ) : (
     <SecondScreen>
       <Header>
         <FadeIn>

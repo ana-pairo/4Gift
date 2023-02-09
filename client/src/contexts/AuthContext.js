@@ -1,155 +1,147 @@
-import { createContext, useEffect, useState } from "react";
+import { createContext, useContext } from "react";
+import { auth } from "../services/firebaseConfig";
 import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
   GoogleAuthProvider,
   signInWithPopup,
-  signOut,
+  getAuth,
+  deleteUser,
 } from "firebase/auth";
 
-import { auth } from "../services/firebaseConfig";
-import { Navigate } from "react-router-dom";
+import useSignUp from "../hooks/api/useSignUp";
+import useSignIn from "../hooks/api/useSignIn";
+import { UserContext } from "./UserContext";
 
 export const AuthContext = createContext({});
 
 export default function AuthProvider({ children }) {
+  const { signUp } = useSignUp();
+  const { signIn } = useSignIn();
   const googleProvider = new GoogleAuthProvider();
-  const [userData, setUserData] = useState(null);
+  const { setUserData, cleanLocalStorage, createLocalStorage } =
+    useContext(UserContext);
 
-  useEffect(() => {
-    const sessionToken = localStorage.getItem("@Auth:token");
-    const sessionUser = JSON.parse(localStorage.getItem("@Auth:user"));
-
-    if (sessionToken && sessionUser) setUserData({ ...sessionUser });
-  }, []);
-
-  async function SignInGoogle() {
+  async function SignIn({ type, email, password }) {
     let response;
+    let firebaseResult;
+
     try {
-      const result = await signInWithPopup(auth, googleProvider);
+      if (type === "Google") {
+        firebaseResult = await signInWithPopup(auth, googleProvider);
+      }
 
-      if (result) {
-        const { displayName, phoneNumber, photoURL, accessToken } = result.user;
-
-        setUserData({
-          displayName,
-          phoneNumber,
-          photoURL,
-          birthday: null,
-        });
-
-        localStorage.setItem(
-          "@Auth:user",
-          JSON.stringify({
-            displayName,
-            phoneNumber,
-            photoURL,
-            birthday: null,
-          })
+      if (type === "Email") {
+        firebaseResult = await signInWithEmailAndPassword(
+          auth,
+          email,
+          password
         );
-        localStorage.setItem("@Auth:token", accessToken);
-
-        return (response = {
-          check: true,
-          error: false,
-        });
       }
     } catch (error) {
-      const errorCode = error.code;
-      return (response = {
+      response = {
         check: false,
-        error: errorCode,
-      });
+        error: error.code,
+      };
+
+      return response;
     }
-  }
 
-  async function SignInEmail(email, password) {
-    let response;
+    const { accessToken, displayName, phoneNumber, photoURL } =
+      firebaseResult.user;
+
+    const body = {
+      email: firebaseResult.user.email,
+      accessToken,
+      displayName,
+      phoneNumber,
+      photoURL,
+    };
+
     try {
-      const result = await signInWithEmailAndPassword(auth, email, password);
+      const userResult = await signIn(body);
+      console.log(userResult);
 
-      if (result) {
-        const { displayName, phoneNumber, photoURL, accessToken } = result.user;
+      setUserData({ ...userResult });
 
-        setUserData({
-          displayName,
-          phoneNumber,
-          photoURL,
-          birthday: null,
-        });
-
-        localStorage.setItem(
-          "@Auth:user",
-          JSON.stringify({
-            displayName,
-            phoneNumber,
-            photoURL,
-            birthday: null,
-          })
-        );
-        localStorage.setItem("@Auth:token", accessToken);
-
-        return (response = {
-          check: true,
-          error: false,
-        });
-      }
+      createLocalStorage(userResult, accessToken);
     } catch (error) {
-      const errorCode = error.code;
-      return (response = {
+      response = {
         check: false,
-        error: errorCode,
-      });
+        error: "database",
+      };
+      return response;
     }
+
+    response = {
+      check: true,
+      error: false,
+    };
+
+    return response;
   }
 
-  async function SignUpEmail(email, password) {
+  async function SignUpEmail({ email, password }) {
     let response;
+    let body;
     try {
-      const result = await createUserWithEmailAndPassword(
+      const firebaseResult = await createUserWithEmailAndPassword(
         auth,
         email,
         password
       );
 
-      if (result) {
-        return (response = {
-          check: true,
-          error: false,
-        });
-      }
+      const accessToken = firebaseResult.user.accessToken;
+
+      body = {
+        email,
+        accessToken,
+      };
     } catch (error) {
-      const errorCode = error.code;
-      return (response = {
+      response = {
         check: false,
-        error: errorCode,
-      });
+        error: error.code,
+      };
+      return response;
     }
+
+    try {
+      await signUp(body);
+    } catch (error) {
+      const firebaseUser = getAuth().currentUser;
+
+      await deleteUser(firebaseUser);
+
+      response = {
+        check: false,
+        error: "database",
+      };
+
+      return response;
+    }
+
+    response = {
+      check: true,
+      error: false,
+    };
+
+    return response;
   }
 
-  async function SignOut() {
-    localStorage.clear();
+  async function signOut() {
+    cleanLocalStorage();
+
     setUserData(null);
+
     try {
       await signOut(auth);
     } catch (error) {
       console.log(error);
     }
-
-    return <Navigate to="/" />;
   }
 
   return (
-    <AuthContext.Provider
-      value={{
-        SignInEmail,
-        SignUpEmail,
-        SignInGoogle,
-        SignOut,
-        signed: !!userData,
-        userData,
-      }}
-    >
+    <AuthContext.Provider value={{ SignIn, SignUpEmail, signOut }}>
       {children}
     </AuthContext.Provider>
   );
