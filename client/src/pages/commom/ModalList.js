@@ -1,9 +1,11 @@
 import { ClickAwayListener } from "@mui/base";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+import { auth } from "../../services/firebaseConfig";
+import { signOut } from "firebase/auth";
 import styled from "styled-components";
 
-function Logout({ setIsModalOpen }) {
+function Logout({ setIsModalOpen, cleanLocalStorage, setUserData }) {
   const navigate = useNavigate();
   return (
     <TransparencyWrapper>
@@ -23,10 +25,18 @@ function Logout({ setIsModalOpen }) {
               Cancelar
             </CancelButton>
             <ConfirmButton
-              onClick={() => {
+              onClick={async () => {
+                cleanLocalStorage();
+                setUserData(null);
                 setIsModalOpen(false);
+
+                try {
+                  await signOut(auth);
+                } catch (error) {
+                  console.log(error);
+                }
+
                 navigate("/");
-                //TO DO LIMPAR STORAGE
               }}
             >
               Sim

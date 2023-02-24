@@ -7,6 +7,7 @@ import PrivatePage from "./PrivateRoutes";
 import Home from "../pages/Home/HomePage";
 import Account from "../pages/Account/AccountPage";
 import FriendsList from "../pages/FriendsList/FriendsListPage";
+import Profile from "../pages/Profile/ProfilePage";
 import AuthProvider from "../contexts/AuthContext";
 
 export default function AppRoutes() {
@@ -35,6 +36,7 @@ export default function AppRoutes() {
           <Route path="account" element={<Account />} />
           <Route path="home" element={<Home />} />
           <Route path="friends" element={<FriendsList />} />
+          <Route path="profile" element={<Profile />} />
         </Route>
       </Routes>
     </Router>

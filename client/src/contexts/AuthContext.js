@@ -1,12 +1,10 @@
 import { createContext, useContext } from "react";
 import { auth } from "../services/firebaseConfig";
-import { Navigate } from "react-router-dom";
 import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
   GoogleAuthProvider,
   signInWithPopup,
-  signOut,
   getAuth,
   deleteUser,
 } from "firebase/auth";
@@ -130,7 +128,7 @@ export default function AuthProvider({ children }) {
     return response;
   }
 
-  async function SignOut() {
+  async function signOut() {
     cleanLocalStorage();
 
     setUserData(null);
@@ -140,12 +138,10 @@ export default function AuthProvider({ children }) {
     } catch (error) {
       console.log(error);
     }
-
-    return <Navigate to="/" />;
   }
 
   return (
-    <AuthContext.Provider value={{ SignIn, SignUpEmail, SignOut }}>
+    <AuthContext.Provider value={{ SignIn, SignUpEmail, signOut }}>
       {children}
     </AuthContext.Provider>
   );

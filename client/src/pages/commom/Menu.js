@@ -4,14 +4,17 @@ import { MdManageAccounts } from "react-icons/md";
 import { VscSignOut } from "react-icons/vsc";
 import { AiFillHome } from "react-icons/ai";
 import { useNavigate } from "react-router-dom";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { ClickAwayListener } from "@mui/base";
 import { modals } from "./ModalList";
+import { UserContext } from "../../contexts/UserContext";
 
 export default function Menu() {
   const navigate = useNavigate();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const { cleanLocalStorage, setUserData } = useContext(UserContext);
+
   return (
     <>
       <ClickAwayListener
@@ -41,12 +44,9 @@ export default function Menu() {
               <VscSignOut
                 size={"45px"}
                 color={"#ededed"}
-                onClick={() => {
+                onClick={async () => {
                   setIsMenuOpen(false);
                   setIsModalOpen(true);
-                  // navigate("/");
-                  //TO DO
-                  // LIMPAR STORAGE
                 }}
               />
             </div>
@@ -75,7 +75,15 @@ export default function Menu() {
           </HomeWrapper>
         </Menuwrapper>
       </ClickAwayListener>
-      {isModalOpen ? <modals.Logout setIsModalOpen={setIsModalOpen} /> : ""}
+      {isModalOpen ? (
+        <modals.Logout
+          setIsModalOpen={setIsModalOpen}
+          cleanLocalStorage={cleanLocalStorage}
+          setUserData={setUserData}
+        />
+      ) : (
+        ""
+      )}
     </>
   );
 }
